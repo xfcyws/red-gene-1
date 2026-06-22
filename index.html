@@ -34,6 +34,8 @@
             transition: opacity 0.5s;
         }
         .page.active { display: flex; }
+
+        /* ========== 第1页：封面 ========== */
         .cover-poster {
             width: 85%;
             max-width: 360px;
@@ -59,26 +61,32 @@
         .cover-subtitle { font-size: 0.95rem; color: rgba(255,215,0,0.8); margin-bottom: 40px; letter-spacing: 1px; }
         .btn-start { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 16px 64px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
         .btn-start:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2); }
+
+        /* ========== 第2页：输入页 ========== */
         .compass-img { width: 100px; height: 100px; margin-bottom: 35px; opacity: 0.9; }
         .input-guide { font-size: 0.95rem; color: rgba(255,215,0,0.7); margin-bottom: 30px; line-height: 2; letter-spacing: 1px; }
         .input-box { width: 75%; max-width: 280px; height: 56px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,215,0,0.6); border-radius: 28px; color: #FFD700; font-size: 1.4rem; text-align: center; outline: none; margin-bottom: 35px; transition: border-color 0.3s, background 0.3s; }
         .input-box:focus { border-color: #FFD700; background: rgba(255,255,255,0.12); }
         .input-box::placeholder { color: rgba(255,215,0,0.3); font-size: 1.1rem; }
         .btn-decode { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 48px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+
+        /* ========== 第3页：解码动画（静态党徽） ========== */
         .emblem-static { width: 100px; height: 100px; margin-bottom: 50px; }
         .decoding-text { font-size: 0.95rem; color: rgba(255,215,0,0.6); letter-spacing: 1px; }
+
+        /* ========== 第4页：结果页 ========== */
         .report-card { width: 88%; max-width: 380px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.5); border-radius: 18px; padding: 35px 25px; position: relative; backdrop-filter: blur(2px); }
         .report-title { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 18px; margin-bottom: 22px; }
         .report-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.95rem; }
         .report-item .label { color: rgba(255,215,0,0.65); letter-spacing: 1px; }
         .report-item .value { font-weight: 600; text-align: right; max-width: 60%; line-height: 1.5; }
-        .report-poem { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,215,0,0.2); font-size: 1.05rem; line-height: 2.2; white-space: pre-line; letter-spacing: 1px; }
-        .report-seal { position: absolute; bottom: 18px; right: 18px; width: 68px; height: 68px; border: 2px solid #CC0000; border-radius: 50%; color: #CC0000; font-size: 0.95rem; font-weight: bold; display: flex; align-items: center; justify-content: center; transform: rotate(-15deg); opacity: 0.85; }
+        .report-poem { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,215,0,0.2); font-size: 1.1rem; line-height: 2.4; white-space: pre-line; letter-spacing: 1px; }
         .btn-poster { margin-top: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+
+        /* ========== 第5页：海报预览 ========== */
         .poster-preview { width: 82%; max-width: 340px; aspect-ratio: 7/10; background: linear-gradient(160deg, #8B0000 0%, #B22222 40%, #8B0000 100%); border: 2px solid rgba(255,215,0,0.6); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; position: relative; overflow: hidden; box-shadow: 0 8px 35px rgba(0,0,0,0.4); }
         .poster-watermark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.04)"/></svg>'); pointer-events: none; }
         .poster-poem { font-size: 1.05rem; line-height: 2.4; text-shadow: 0 0 12px rgba(255,215,0,0.25); z-index: 1; white-space: pre-line; text-align: center; letter-spacing: 1px; }
-        .poster-seal { margin-top: 35px; width: 76px; height: 76px; border: 3px solid #CC0000; border-radius: 50%; color: #CC0000; font-size: 1.2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; transform: rotate(-15deg); z-index: 1; opacity: 0.9; }
         .btn-share { margin-top: 28px; background: transparent; color: #FFD700; border: 2px solid rgba(255,215,0,0.6); padding: 12px 36px; font-size: 1rem; border-radius: 50px; letter-spacing: 3px; cursor: pointer; transition: background 0.3s, border-color 0.3s; }
         .btn-share:active { background: rgba(255,215,0,0.1); border-color: #FFD700; }
         .poster-preview img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
@@ -86,40 +94,44 @@
 </head>
 <body>
 <div class="container">
+    <!-- 第1页：封面 -->
     <div class="page active" id="page1">
         <div class="cover-poster"><img src="images/cover-poster.png" alt="封面" class="poster-img"></div>
         <div class="cover-title">姓名中的信仰密码</div>
         <div class="cover-subtitle">你的名字里，藏着怎样的红色基因？</div>
         <button class="btn-start" onclick="goToPage(2)">开 启 鉴 定</button>
     </div>
+    <!-- 第2页：输入页 -->
     <div class="page" id="page2">
         <img src="images/deco-star.png" alt="装饰" class="compass-img">
         <div class="input-guide">泱泱华夏，姓名是家族的血脉<br>也是时代的烙印<br>今日，不问前程，只问初心</div>
         <input type="text" class="input-box" id="nameInput" placeholder="写下你的名字" maxlength="4" oninput="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')">
         <button class="btn-decode" onclick="startDecode()">启封 · 基因鉴定</button>
     </div>
+    <!-- 第3页：解码动画 -->
     <div class="page" id="page3">
         <img src="images/party-emblem.png" alt="党徽" class="emblem-static">
         <div class="decoding-text" id="decodingText">正在解析姓名中的信仰序列……</div>
     </div>
+    <!-- 第4页：结果页（已删除姓名栏和印章） -->
     <div class="page" id="page4">
         <div class="report-card">
             <div class="report-title">红色基因 · 鉴定报告</div>
-            <div class="report-item"><span class="label">姓 名</span><span class="value" id="reportName">---</span></div>
             <div class="report-item"><span class="label">显性基因</span><span class="value" id="reportAttrA">---</span></div>
             <div class="report-item"><span class="label">隐性基因</span><span class="value" id="reportAttrB">---</span></div>
             <div class="report-item"><span class="label">基因纯度</span><span class="value">100%热爱</span></div>
             <div class="report-poem" id="reportPoem">---</div>
-            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);"><span>鉴定单位：红色基因研究中心</span><span>2026年7月1日</span></div>
-            <div class="report-seal" id="reportSeal">---</div>
+            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);">
+                <span>鉴定单位：红色基因研究中心</span><span>2026年7月1日</span>
+            </div>
         </div>
         <button class="btn-poster" onclick="goToPage(5)">生成专属海报</button>
     </div>
+    <!-- 第5页：海报预览（已删除印章） -->
     <div class="page" id="page5">
         <div class="poster-preview" id="posterExportArea">
             <div class="poster-watermark"></div>
             <div class="poster-poem" id="posterPoem">---</div>
-            <div class="poster-seal" id="posterSeal">---</div>
         </div>
         <button class="btn-share" id="btnSave">保存并分享</button>
         <button class="btn-share" style="margin-top:12px;" onclick="goToPage(1)">重新鉴定</button>
@@ -180,79 +192,7 @@ const poemTemplates = [
     `{全名}的红色基因：\n{attrA} + {attrB} = 100%热爱。`,
     `{全名}的青春宣言：\n{attrA}，{attrB}。\n请党放心，强国有我。`,
     `{全名}，你的名字是：\n{attrA}的传承，\n{attrB}的接力。`,
-    `{全名}的奋斗格言：\n以{attrA}为舟，\n以{attrB}为桨，\n驶向星辰大海。`,
-    // J类：时空对话型（续）
-    `{全名}，你的名字是一艘红船，\n载着{attrA}的初心，\n驶向{attrB}的远方。\n百年恰是风华正茂。`,
-    `{全名}，你听——\n{第一字}里回响着{attrA}的誓言，\n{第二字}里激荡着{attrB}的号角。\n出发，就现在。`,
-    `{全名}，你的名字是{attrA}的种子，\n播撒在{attrB}的土壤。\n让信仰生根，让梦想开花。`,
-    `从{第一字}到{第二字}，\n是从{attrA}到{attrB}的接力。\n{全名}，你是第几棒？`,
-
-    // K类：对仗工整型
-    `{第一字}是朝阳，{attrA}；\n{第二字}是晚霞，{attrB}。\n朝朝暮暮，皆是奋斗。`,
-    `{第一字}是笔，书写{attrA}；\n{第二字}是墨，渲染{attrB}。\n{全名}，绘就人生画卷。`,
-    `{第一字}为阳，{attrA}；\n{第二字}为阴，{attrB}。\n刚柔并济，方成大道。`,
-    `{第一字}是帆，{attrA}；\n{第二字}是桨，{attrB}。\n乘风破浪，扬帆远航。`,
-
-    // L类：三行微型诗
-    `{全名}\n{attrA}\n{attrB}`,
-    `{全名}\n{第一字}·{attrA}\n{第二字}·{attrB}`,
-    `{attrA}\n{attrB}\n——{全名}`,
-    `{全名}\n左肩{attrA}\n右肩{attrB}`,
-
-    // M类：排比金句
-    `是{attrA}，让{全名}不惧风雨；\n是{attrB}，让{全名}步履坚定。\n征途漫漫，惟有奋斗。`,
-    `{全名}，你的{attrA}，是星火；\n你的{attrB}，是火炬。\n星火相传，照亮征程。`,
-    `因为{attrA}，所以无畏；\n因为{attrB}，所以坚守。\n{全名}，这是信仰的力量。`,
-    `{全名}，用{attrA}诠释初心，\n用{attrB}践行使命。\n请党放心，强国有我。`,
-
-    // N类：谐音借义型
-    `{全名}，{第一字}谐“{attrA}”，\n{第二字}通“{attrB}”。\n音义相合，信仰天成。`,
-    `听，{第一字}音如{attrA}；\n品，{第二字}义似{attrB}。\n{全名}，名字即信仰。`,
-
-    // O类：直接定义型
-    `{全名}的信仰密码：\n显性基因——{attrA}\n隐性基因——{attrB}`,
-    `鉴定报告：\n{全名}，你的红色基因由{attrA}和{attrB}构成，\n纯度100%。`,
-
-    // P类：故事叙事型
-    `爷爷说，{第一字}是{attrA}；\n父亲说，{第二字}是{attrB}。\n{全名}说，这是我的传承。`,
-    `多年前，父母在{第一字}里写下{attrA}的期盼，\n在{第二字}里藏下{attrB}的祝福。\n今天，{全名}读懂了。`,
-
-    // Q类：问答自省型
-    `{全名}，你问自己：\n何为{attrA}？\n何为{attrB}？\n行动，就是最好的答案。`,
-    `如果有人问{全名}：你的信仰是什么？\n他会说：{attrA}，{attrB}。`,
-    `{全名}的青春答卷：\n以{attrA}起笔，\n以{attrB}收尾。\n满分。`,
-
-    // R类：诗意比喻型
-    `{全名}，你的名字是{attrA}的浪花，\n汇入{attrB}的海洋。\n一滴水，也能折射太阳。`,
-    `{全名}，你的名字是{attrA}的音符，\n谱成{attrB}的乐章。\n平凡也能奏响华章。`,
-    `{全名}，你的名字是{attrA}的砖石，\n砌进{attrB}的大厦。\n无名，亦英雄。`,
-
-    // S类：嵌字对联型
-    `上联：{第一字}蕴{attrA}\n下联：{第二字}藏{attrB}\n横批：{全名}`,
-    `左：{第一字}·{attrA}\n右：{第二字}·{attrB}\n中：{全名}`,
-
-    // T类：极简态度型
-    `{全名}：{attrA} × {attrB} = 无限可能`,
-    `{全名}，以{attrA}为甲，以{attrB}为马。`,
-    `{全名}的座右铭：{attrA}，{attrB}。`,
-    `{全名}，把{attrA}刻进骨子，把{attrB}融进血液。`,
-
-    // U类：时空压缩型
-    `昨天，{attrA}；今天，{attrB}。{全名}，明天由你书写。`,
-    `过去，{attrA}是根；未来，{attrB}是翼。{全名}，根深翼远。`,
-    `百年之前，他们{attrA}；百年之后，我们{attrB}。{全名}，接续奋斗。`,
-
-    // V类：身份宣言型
-    `我是{全名}，我选择{attrA}，我坚守{attrB}。`,
-    `{全名}，一名{attrA}的时代新人，一个{attrB}的奋斗者。`,
-    `{全名}的标签：{attrA}，{attrB}。`,
-    `{全名}，不是天生的英雄，只因{attrA}和{attrB}，选择挺身而出。`,
-
-    // W类：温暖寄语型
-    `亲爱的{全名}，愿你的{attrA}如阳光，愿你的{attrB}如雨露。`,
-    `{全名}，愿你带着{attrA}去爱，带着{attrB}去闯。`,
-    `致{全名}：世界因你的{attrA}而温暖，因你的{attrB}而明亮。`,
-    `{全名}，如果累了，就想想你的{attrA}和{attrB}。它们是你永远的底气。`
+    `{全名}的奋斗格言：\n以{attrA}为舟，\n以{attrB}为桨，\n驶向星辰大海。`
 ];
 
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -292,13 +232,10 @@ function startDecode() {
     setTimeout(() => {
         clearInterval(interval);
         let res = decodeName(name);
-        document.getElementById('reportName').textContent = name;
         document.getElementById('reportAttrA').textContent = res.attrA;
         document.getElementById('reportAttrB').textContent = res.attrB;
         document.getElementById('reportPoem').textContent = res.poem;
-        document.getElementById('reportSeal').textContent = name;
         document.getElementById('posterPoem').textContent = res.poem;
-        document.getElementById('posterSeal').textContent = name;
         goToPage(4);
     }, 2000);
 }
