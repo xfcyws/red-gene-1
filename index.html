@@ -8,82 +8,33 @@
     <script src="geneLib.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #8B0000;
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-            overflow: hidden;
-        }
-        .container {
-            width: 100%;
-            height: 100vh;
-            background: #8B0000;
-            position: relative;
-            overflow: hidden;
-        }
-        .page {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #FFD700;
-            text-align: center;
-            padding: 20px;
-            transition: opacity 0.5s;
-        }
+        body { background: #8B0000; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; overflow: hidden; }
+        .container { width: 100%; height: 100vh; background: #8B0000; position: relative; overflow: hidden; }
+        .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; color: #FFD700; text-align: center; padding: 20px; transition: opacity 0.5s; }
         .page.active { display: flex; }
-
-        /* ========== 第1页：封面 ========== */
-        .cover-poster {
-            width: 85%;
-            max-width: 360px;
-            aspect-ratio: 7/10;
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-        }
+        .cover-poster { width: 85%; max-width: 360px; aspect-ratio: 7/10; margin-bottom: 30px; position: relative; overflow: hidden; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
         .poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .cover-poster::after {
-            content: "";
-            position: absolute;
-            top: -100%; left: -100%;
-            width: 200%; height: 200%;
-            background: linear-gradient(135deg, transparent 0%, transparent 35%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.08) 60%, transparent 65%, transparent 100%);
-            animation: sweepLight 4s ease-in-out infinite;
-            z-index: 2; pointer-events: none;
-        }
+        .cover-poster::after { content: ""; position: absolute; top: -100%; left: -100%; width: 200%; height: 200%; background: linear-gradient(135deg, transparent 0%, transparent 35%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.35) 45%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.08) 60%, transparent 65%, transparent 100%); animation: sweepLight 4s ease-in-out infinite; z-index: 2; pointer-events: none; }
         @keyframes sweepLight { 0% { top: -100%; left: -100%; } 100% { top: 100%; left: 100%; } }
         .cover-title { font-size: 1.8rem; font-weight: bold; letter-spacing: 3px; margin-bottom: 12px; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
         .cover-subtitle { font-size: 0.95rem; color: rgba(255,215,0,0.8); margin-bottom: 40px; letter-spacing: 1px; }
-        .btn-start { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 16px 64px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-        .btn-start:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2); }
-
-        /* ========== 第2页：输入页 ========== */
+        .btn-start { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 16px 64px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 4px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
+        .btn-start:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(255,215,0,0.2); }
         .compass-img { width: 100px; height: 100px; margin-bottom: 35px; opacity: 0.9; }
         .input-guide { font-size: 0.95rem; color: rgba(255,215,0,0.7); margin-bottom: 30px; line-height: 2; letter-spacing: 1px; }
         .input-box { width: 75%; max-width: 280px; height: 56px; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,215,0,0.6); border-radius: 28px; color: #FFD700; font-size: 1.4rem; text-align: center; outline: none; margin-bottom: 35px; transition: border-color 0.3s, background 0.3s; }
         .input-box:focus { border-color: #FFD700; background: rgba(255,255,255,0.12); }
         .input-box::placeholder { color: rgba(255,215,0,0.3); font-size: 1.1rem; }
-        .btn-decode { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 48px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-
-        /* ========== 第3页：解码动画（静态党徽） ========== */
+        .btn-decode { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 48px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
         .emblem-static { width: 100px; height: 100px; margin-bottom: 50px; }
         .decoding-text { font-size: 0.95rem; color: rgba(255,215,0,0.6); letter-spacing: 1px; }
-
-        /* ========== 第4页：结果页 ========== */
         .report-card { width: 88%; max-width: 380px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.5); border-radius: 18px; padding: 35px 25px; position: relative; backdrop-filter: blur(2px); }
         .report-title { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 18px; margin-bottom: 22px; }
         .report-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.95rem; }
         .report-item .label { color: rgba(255,215,0,0.65); letter-spacing: 1px; }
         .report-item .value { font-weight: 600; text-align: right; max-width: 60%; line-height: 1.5; }
         .report-poem { margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,215,0,0.2); font-size: 1.1rem; line-height: 2.4; white-space: pre-line; letter-spacing: 1px; }
-        .btn-poster { margin-top: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-
-        /* ========== 第5页：海报预览 ========== */
+        .btn-poster { margin-top: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
         .poster-preview { width: 82%; max-width: 340px; aspect-ratio: 7/10; background: linear-gradient(160deg, #8B0000 0%, #B22222 40%, #8B0000 100%); border: 2px solid rgba(255,215,0,0.6); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; position: relative; overflow: hidden; box-shadow: 0 8px 35px rgba(0,0,0,0.4); }
         .poster-watermark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.04)"/></svg>'); pointer-events: none; }
         .poster-poem { font-size: 1.05rem; line-height: 2.4; text-shadow: 0 0 12px rgba(255,215,0,0.25); z-index: 1; white-space: pre-line; text-align: center; letter-spacing: 1px; }
@@ -94,26 +45,22 @@
 </head>
 <body>
 <div class="container">
-    <!-- 第1页：封面 -->
     <div class="page active" id="page1">
         <div class="cover-poster"><img src="images/cover-poster.png" alt="封面" class="poster-img"></div>
         <div class="cover-title">姓名中的信仰密码</div>
         <div class="cover-subtitle">你的名字里，藏着怎样的红色基因？</div>
         <button class="btn-start" onclick="goToPage(2)">开 启 鉴 定</button>
     </div>
-    <!-- 第2页：输入页 -->
     <div class="page" id="page2">
         <img src="images/deco-star.png" alt="装饰" class="compass-img">
         <div class="input-guide">泱泱华夏，姓名是家族的血脉<br>也是时代的烙印<br>今日，不问前程，只问初心</div>
         <input type="text" class="input-box" id="nameInput" placeholder="写下你的名字" maxlength="4" oninput="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')">
         <button class="btn-decode" onclick="startDecode()">启封 · 基因鉴定</button>
     </div>
-    <!-- 第3页：解码动画 -->
     <div class="page" id="page3">
         <img src="images/party-emblem.png" alt="党徽" class="emblem-static">
         <div class="decoding-text" id="decodingText">正在解析姓名中的信仰序列……</div>
     </div>
-    <!-- 第4页：结果页（已删除姓名栏和印章） -->
     <div class="page" id="page4">
         <div class="report-card">
             <div class="report-title">红色基因 · 鉴定报告</div>
@@ -121,13 +68,10 @@
             <div class="report-item"><span class="label">隐性基因</span><span class="value" id="reportAttrB">---</span></div>
             <div class="report-item"><span class="label">基因纯度</span><span class="value">100%热爱</span></div>
             <div class="report-poem" id="reportPoem">---</div>
-            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);">
-                <span>鉴定单位：红色基因研究中心</span><span>2026年7月1日</span>
-            </div>
+            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);"><span>鉴定单位：红色基因研究中心</span><span>2026年7月1日</span></div>
         </div>
         <button class="btn-poster" onclick="goToPage(5)">生成专属海报</button>
     </div>
-    <!-- 第5页：海报预览（已删除印章） -->
     <div class="page" id="page5">
         <div class="poster-preview" id="posterExportArea">
             <div class="poster-watermark"></div>
@@ -138,7 +82,7 @@
     </div>
 </div>
 <script>
-// 兜底库
+// 兜底库 (geneLib 未定义时使用)
 const fallbackGene = {
     attrA: ["赤诚热烈，初心如炬","朴实无华，至真至纯"],
     attrB: ["默默耕耘，静待花开","坚守本心，方得始终"],
@@ -146,8 +90,9 @@ const fallbackGene = {
     attrD: ["无名亦有名，平凡亦英雄"]
 };
 
-// 50套诗文模板（官媒风格）
+// 100套诗文模板（前50套经典 + 后50套简洁/问答/奋斗/身份/藏头）
 const poemTemplates = [
+    // 1-50 套 (古风、现代诗、金句、宣言)
     `《{姓氏}氏志》\n{第一字}山{第二字}水之间，一片丹心在此间。\n生来有{attrA}，\n修得{attrB}。\n莫问前程几许，只顾风雨兼程。\n是为{全名}，是为信仰。`,
     `{全名}·铭\n名者，命也。父母赐我以名，我以此名立志。\n愿有{attrA}之胸怀，\n亦有{attrB}之坚守。\n以此铭志，以此践行。`,
     `行香子·{全名}\n{第一字}字当头，{第二字}字为骨。\n这一生，{attrA}，{attrB}。\n不负韶华，不负时代。\n行遍山河，此心依旧。`,
@@ -192,9 +137,9 @@ const poemTemplates = [
     `{全名}的红色基因：\n{attrA} + {attrB} = 100%热爱。`,
     `{全名}的青春宣言：\n{attrA}，{attrB}。\n请党放心，强国有我。`,
     `{全名}，你的名字是：\n{attrA}的传承，\n{attrB}的接力。`,
-    `{全名}的奋斗格言：\n以{attrA}为舟，\n以{attrB}为桨，\n驶向星辰大海。`
-        // ===== 第51–100套 新增模板 =====
-    // X类：简洁宣言（10套）
+    `{全名}的奋斗格言：\n以{attrA}为舟，\n以{attrB}为桨，\n驶向星辰大海。`,
+
+    // 51-100 套 (简洁宣言、时代问卷、奋斗姿态、身份认同、藏头嵌字)
     `{全名}：以{attrA}为魂，以{attrB}为骨。`,
     `{全名}：{attrA}于心，{attrB}于行。`,
     `{全名}：{第一字}是{attrA}，{第二字}是{attrB}。`,
@@ -205,8 +150,6 @@ const poemTemplates = [
     `{全名}：{attrA}是光，{attrB}是热。`,
     `{全名}：{attrA}是锚，{attrB}是帆。`,
     `{全名}：{attrA}为常，{attrB}为变。`,
-
-    // Y类：时代问卷（10套）
     `时代在问：何为青年？\n{全名}在答：{attrA}，{attrB}。`,
     `历史出卷，{全名}作答：\n{attrA}，{attrB}。`,
     `如果信仰有颜色，\n那是{attrA}的金，{attrB}的红。\n——{全名}`,
@@ -217,8 +160,6 @@ const poemTemplates = [
     `星火之问：何以燎原？\n{全名}：以{attrA}，以{attrB}。`,
     `赶考之问：何以答卷？\n{全名}：{attrA}是笔，{attrB}是墨。`,
     `青春之问：何以不朽？\n{全名}：{attrA}化骨，{attrB}为魂。`,
-
-    // Z类：奋斗姿态（10套）
     `{全名}的奋斗公式：\n{attrA} + {attrB} + 汗水 = 梦想`,
     `{全名}的时间表：\n清晨用{attrA}打卡，深夜用{attrB}复盘。`,
     `{全名}的日常：\n左手{attrA}，右手{attrB}，脚下生风。`,
@@ -229,8 +170,6 @@ const poemTemplates = [
     `{全名}的行囊：\n左边装着{attrA}，右边装着{attrB}，心中有火。`,
     `{全名}的征途：\n脚踩{attrA}，头顶{attrB}，一路向前。`,
     `{全名}的答卷：\n用{attrA}起笔，用{attrB}落款。`,
-
-    // W类：身份认同（10套）
     `我是{全名}，{attrA}是我的底色，{attrB}是我的锋芒。`,
     `{全名}，一个{attrA}的普通人，一个{attrB}的追梦人。`,
     `标签：{全名}\n备注：{attrA}，{attrB}。`,
@@ -241,8 +180,6 @@ const poemTemplates = [
     `{全名}的名片：\n正面{attrA}，反面{attrB}。`,
     `你好，我是{全名}。\n我有两件武器：{attrA}和{attrB}。`,
     `{全名}的自我介绍：\n一个{attrA}的人，做{attrB}的事。`,
-
-    // V类：藏头嵌字（10套）
     `{第一字}蕴{attrA}，{第二字}藏{attrB}。\n{全名}，这就是你。`,
     `{第一字}起{attrA}，{第二字}承{attrB}。\n{全名}，自成华章。`,
     `{第一字}为{attrA}，{第二字}为{attrB}。\n{全名}，名副其实。`,
@@ -256,6 +193,7 @@ const poemTemplates = [
 ];
 
 function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 function decodeName(name) {
     let firstChar = name.charAt(0);
     let secondChar = name.charAt(1) || name.charAt(0);
@@ -278,10 +216,12 @@ function decodeName(name) {
         .replace(/{attrC}/g, attrC).replace(/{attrD}/g, attrD);
     return { attrA, attrB, attrC, attrD, poem };
 }
+
 function goToPage(num) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page' + num).classList.add('active');
 }
+
 function startDecode() {
     let name = document.getElementById('nameInput').value.trim();
     if (!name || name.length < 2) { alert('请写下你的完整姓名（至少2个汉字）'); return; }
@@ -299,6 +239,7 @@ function startDecode() {
         goToPage(4);
     }, 2000);
 }
+
 async function exportPoster() {
     const poster = document.getElementById('posterExportArea');
     try {
@@ -310,6 +251,7 @@ async function exportPoster() {
         alert('海报生成失败，请重试');
     }
 }
+
 document.getElementById('btnSave').addEventListener('click', exportPoster);
 document.getElementById('nameInput').addEventListener('keypress', e => { if (e.key==='Enter') startDecode(); });
 </script>
