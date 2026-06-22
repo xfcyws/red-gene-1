@@ -155,22 +155,12 @@
             cursor: pointer;
         }
 
-        /* ========== 第3页：解码动画（无圆圈，仅旋转党徽） ========== */
-        .emblem-anim {
+        /* ========== 第3页：解码动画（静态党徽，不旋转） ========== */
+        .emblem-static {
             width: 120px;
             height: 120px;
             margin-bottom: 40px;
-            animation: spinFast 0.6s linear 3, pulse 1.5s ease-in-out 3;
-        }
-
-        @keyframes spinFast { 
-            from { transform: rotate(0deg); } 
-            to { transform: rotate(360deg); } 
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.15); }
+            /* 无动画 */
         }
 
         .decoding-text {
@@ -267,7 +257,6 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.3);
         }
 
-        /* 海报水印：党徽轮廓SVG */
         .poster-watermark {
             position: absolute;
             top: 0; left: 0;
@@ -313,6 +302,13 @@
         }
 
         .btn-share:active { opacity: 0.7; }
+
+        .poster-preview canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -343,9 +339,9 @@
         <button class="btn-decode" onclick="startDecode()">启封 · 基因鉴定</button>
     </div>
 
-    <!-- 第3页：解码动画（无圆圈，仅旋转党徽） -->
+    <!-- 第3页：解码动画（静态党徽） -->
     <div class="page" id="page3">
-        <img src="images/party-emblem.png" alt="党徽" class="emblem-anim">
+        <img src="images/party-emblem.png" alt="党徽" class="emblem-static">
         <div class="decoding-text" id="decodingText">
             正在解析姓名中的信仰序列……
         </div>
@@ -632,7 +628,7 @@
         attrD: ["无名亦有名，平凡亦英雄","每一份微光，都值得被看见"]
     };
 
-    // 20套诗文模板
+    // 20套诗文模板（已修改第18条，去掉“愿你如X”的生硬表达）
     const poemTemplates = [
         `《{姓氏}氏志》\n{第一字}山{第二字}水之间，一片丹心在此间。\n生来有{attrA}，\n修得{attrB}。\n莫问前程几许，只顾风雨兼程。\n是为{全名}，是为信仰。`,
         `{全名}·铭\n名者，命也。父母赐我以名，我以此名立志。\n愿有{attrA}之胸怀，\n亦有{attrB}之坚守。\n以此铭志，以此践行。`,
@@ -651,7 +647,7 @@
         `{全名}的战歌：\n以{第一字}为旗，{attrA}；\n以{第二字}为剑，{attrB}。\n逢山开路，遇水架桥。\n这，就是我的信仰战歌！`,
         `亲爱的{全名}：\n当你写下名字时，\n就写下了一份承诺。\n愿你永远保持{attrB}的初心，\n用{attrC}去丈量世界。\n名字是父母给的，\n信仰是自己选的。\n爱你的人，于2026年7月1日。`,
         `{全名}，你好。\n我是多年后的你。\n我想告诉你——\n你名字里的{attrA}，我守住了；\n你名字里的{attrB}，我做到了。\n谢谢你的名字，让我成为今天的我。`,
-        `致{全名}：\n愿你如{第一字}，{attrA}；\n愿你如{第二字}，{attrB}。\n愿你走过千山万水，\n归来仍是少年。\n愿你与时代同行，\n不负此生。`,
+        `致{全名}：\n你生来就带着{attrA}，\n也蕴藏着{attrB}。\n愿你走过千山万水，\n归来仍是少年。\n愿你与时代同行，\n不负此生。`,
         `我的名字叫{全名}。\n{第一字}是从祖辈那里继承的{attrA}，\n{第二字}是从父辈那里接过的{attrB}。\n现在，轮到我了。\n我会把这份信仰，继续传下去。`,
         `{全名}，记住——\n你有{attrA}的底色，\n也有{attrB}的力量。\n这世界很大，诱惑很多。\n但你的名字会提醒你：\n你是谁，从哪里来，要去哪里。`
     ];
@@ -721,8 +717,18 @@
         const posterElement = document.getElementById('posterExportArea');
         try {
             const dataUrl = await htmlToImage.toPng(posterElement, { quality: 1, pixelRatio: 2 });
-            posterElement.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:10px;" />`;
-            alert('海报已生成，请长按图片保存到相册');
+            const img = new Image();
+            img.src = dataUrl;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                posterElement.innerHTML = '';
+                posterElement.appendChild(canvas);
+                alert('海报已生成，请长按图片保存。\n如无法保存，可使用手机截屏。');
+            };
         } catch (error) {
             console.error('导出失败:', error);
             alert('海报生成失败，请重试');
