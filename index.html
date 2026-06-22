@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>姓名中的信仰密码</title>
+    <!-- html-to-image 用于导出海报 -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #8B0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        .container {
+            width: 375px;
+            height: 667px;
+            background: #8B0000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        .page {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            text-align: center;
+            padding: 30px 20px;
+            transition: opacity 0.5s;
+        }
+
+        .page.active { display: flex; }
+
+        /* ========== 第1页：封面海报 + 左上→右下白色扫光 ========== */
+        .cover-poster {
+            width: 280px;
+            height: 400px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+        }
+
+        .poster-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 扫光动画层 — 左上到右下白色光束 */
+        .cover-poster::after {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, 
+                transparent 0%,
+                transparent 35%,
+                rgba(255, 255, 255, 0.1) 40%,
+                rgba(255, 255, 255, 0.4) 45%,
+                rgba(255, 255, 255, 0.5) 50%,
+                rgba(255, 255, 255, 0.4) 55%,
+                rgba(255, 255, 255, 0.1) 60%,
+                transparent 65%,
+                transparent 100%);
+            animation: sweepLight 4s ease-in-out infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        @keyframes sweepLight {
+            0% { 
+                top: -100%; 
+                left: -100%; 
+            }
+            100% { 
+                top: 100%; 
+                left: 100%; 
+            }
+        }
+
+        .cover-title {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .cover-subtitle {
+            font-size: 14px;
+            color: rgba(255,215,0,0.8);
+            margin-bottom: 40px;
+        }
+
+        .btn-start {
+            background: #FFD700;
+            color: #8B0000;
+            border: none;
+            padding: 14px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-start:active { transform: scale(0.95); }
+
+        /* ========== 第2页：输入页 ========== */
+        .compass-small {
+            width: 100px; height: 100px;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            margin-bottom: 30px;
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .input-guide {
+            font-size: 14px;
+            color: rgba(255,215,0,0.7);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .input-box {
+            width: 200px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #FFD700;
+            border-radius: 25px;
+            color: #FFD700;
+            font-size: 22px;
+            text-align: center;
+            outline: none;
+            margin-bottom: 30px;
+        }
+
+        .input-box::placeholder { color: rgba(255,215,0,0.3); }
+
+        .btn-decode {
+            background: #FFD700;
+            color: #8B0000;
+            border: none;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 50px;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* ========== 第3页：解码动画 ========== */
+        .compass-anim {
+            width: 150px; height: 150px;
+            border: 3px solid #FFD700;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            font-size: 60px;
+            animation: spinFast 0.5s linear 3;
+        }
+
+        @keyframes spinFast { 
+            from { transform: rotate(0deg); } 
+            to { transform: rotate(360deg); } 
+        }
+
+        .decoding-text {
+            font-size: 14px;
+            color: rgba(255,215,0,0.7);
+            margin-top: 20px;
+        }
+
+        /* ========== 第4页：结果页 ========== */
+        .report-card {
+            width: 320px;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 25px 20px;
+            position: relative;
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            border-bottom: 1px solid rgba(255,215,0,0.3);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .report-item .label { color: rgba(255,215,0,0.7); }
+        .report-item .value { font-weight: bold; }
+
+        .report-poem {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,215,0,0.3);
+            font-size: 16px;
+            line-height: 2;
+            font-style: italic;
+            white-space: pre-line;
+        }
+
+        .report-seal {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 60px; height: 60px;
+            border: 2px solid #FF0000;
+            border-radius: 50%;
+            color: #FF0000;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+        }
+
+        .btn-poster {
+            margin-top: 25px;
+            background: #FFD700;
+            color: #8B0000;
+            border: none;
+            padding: 12px 35px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 50px;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        /* ========== 第5页：海报预览（导出区域） ========== */
+        .poster-preview {
+            width: 280px;
+            height: 440px;
+            background: linear-gradient(135deg, #8B0000, #C41E3A, #8B0000);
+            border: 3px solid #FFD700;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+
+        .poster-watermark {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="60" text-anchor="middle" fill="rgba(255,255,255,0.05)" font-size="40">★</text></svg>');
+            pointer-events: none;
+        }
+
+        .poster-poem {
+            font-size: 16px;
+            line-height: 2.2;
+            text-shadow: 0 0 10px rgba(255,215,0,0.3);
+            z-index: 1;
+            white-space: pre-line;
+            text-align: center;
+        }
+
+        .poster-seal {
+            margin-top: 30px;
+            width: 70px; height: 70px;
+            border: 3px solid #FF0000;
+            border-radius: 50%;
+            color: #FF0000;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            z-index: 1;
+        }
+
+        .btn-share {
+            margin-top: 20px;
+            background: transparent;
+            color: #FFD700;
+            border: 2px solid #FFD700;
+            padding: 10px 30px;
+            font-size: 14px;
+            border-radius: 50px;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        .btn-share:active { opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ====== 第1页：封面（海报 + 左上→右下白色扫光） ====== -->
+    <div class="page active" id="page1">
+        <div class="cover-poster">
+            <img src="images/cover-poster.png" alt="封面海报" class="poster-img">
+        </div>
+        <div class="cover-title">姓名中的信仰密码</div>
+        <div class="cover-subtitle">你的名字里，藏着怎样的红色基因？</div>
+        <button class="btn-start" onclick="goToPage(2)">开 启 鉴 定</button>
+    </div>
+
+    <!-- ====== 第2页：输入页 ====== -->
+    <div class="page" id="page2">
+        <div class="compass-small">★</div>
+        <div class="input-guide">
+            泱泱华夏，姓名是家族的血脉<br>
+            也是时代的烙印<br>
+            今日，不问前程，只问初心
+        </div>
+        <input type="text" class="input-box" id="nameInput"
+               placeholder="写下你的名字" maxlength="4"
+               oninput="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')">
+        <button class="btn-decode" onclick="startDecode()">启封 · 基因鉴定</button>
+    </div>
+
+    <!-- ====== 第3页：解码动画 ====== -->
+    <div class="page" id="page3">
+        <div class="compass-anim">★</div>
+        <div class="decoding-text" id="decodingText">
+            正在解析姓名中的信仰序列……
+        </div>
+    </div>
+
+    <!-- ====== 第4页：结果页 ====== -->
+    <div class="page" id="page4">
+        <div class="report-card">
+            <div class="report-title">红色基因 · 鉴定报告</div>
+            <div class="report-item">
+                <span class="label">姓 名</span>
+                <span class="value" id="reportName">---</span>
+            </div>
+            <div class="report-item">
+                <span class="label">显性基因</span>
+                <span class="value" id="reportAttrA">---</span>
+            </div>
+            <div class="report-item">
+                <span class="label">隐性基因</span>
+                <span class="value" id="reportAttrB">---</span>
+            </div>
+            <div class="report-item">
+                <span class="label">基因纯度</span>
+                <span class="value">100%热爱</span>
+            </div>
+            <div class="report-poem" id="reportPoem">---</div>
+            <div class="report-item" style="margin-top:15px; font-size:12px; color:rgba(255,215,0,0.5);">
+                <span>鉴定单位：红色基因研究中心</span>
+                <span>2026年7月1日</span>
+            </div>
+            <div class="report-seal" id="reportSeal">---</div>
+        </div>
+        <button class="btn-poster" onclick="goToPage(5)">生成专属海报</button>
+    </div>
+
+    <!-- ====== 第5页：海报预览（导出区域） ====== -->
+    <div class="page" id="page5">
+        <div class="poster-preview" id="posterExportArea">
+            <div class="poster-watermark"></div>
+            <div class="poster-poem" id="posterPoem">---</div>
+            <div class="poster-seal" id="posterSeal">---</div>
+        </div>
+        <button class="btn-share" id="btnSave">保存并分享</button>
+        <button class="btn-share" style="margin-top:10px;" onclick="goToPage(1)">重新鉴定</button>
+    </div>
+
+</div>
+
+<script>
+    // ============ 完整200字库（精简整合版，每个字一个属性数组） ============
+    const geneLib = {
+        "安": { attrA:["安之若素，从容有度"], attrB:["修己安人，兼济天下"], attrC:["心安处，是吾乡"], attrD:["国安，则家安"] },
+        "昂": { attrA:["昂首阔步，气宇轩昂"], attrB:["昂扬向上，永不言弃"], attrC:["挺起脊梁，顶天立地"], attrD:["这盛世，如你所昂首期盼"] },
+        "柏": { attrA:["松柏长青，岁月不改"], attrB:["岁寒知松柏，患难见真心"], attrC:["扎根大地，向阳而生"], attrD:["如柏之坚，守护山河"] },
+        "博": { attrA:["博学笃志，切问近思"], attrB:["海纳百川，有容乃大"], attrC:["以博学之，以笃行之"], attrD:["博采众长，为我所用"] },
+        "才": { attrA:["才华横溢，锋芒初露"], attrB:["厚积薄发，大器晚成"], attrC:["以才学报国，不负所学"], attrD:["天生我材，为国所用"] },
+        "晨": { attrA:["晨光熹微，朝气蓬勃"], attrB:["闻鸡起舞，只争朝夕"], attrC:["迎着光走，把影子留在身后"], attrD:["如晨星之火，可以燎原"] },
+        "诚": { attrA:["诚于中而形于外"], attrB:["精诚所至，金石为开"], attrC:["以诚待人，以信立身"], attrD:["对党忠诚，是最高承诺"] },
+        "成": { attrA:["功不唐捐，玉汝于成"], attrB:["行稳致远，久久为功"], attrC:["一步一印，砌成理想"], attrD:["成己达人，成家报国"] },
+        "程": { attrA:["星程万里，未来可期"], attrB:["行远自迩，登高自卑"], attrC:["脚下有路，心中有光"], attrD:["新征程上，有你同行"] },
+        "初": { attrA:["初心如雪，洁白无瑕"], attrB:["始终如一，方得始终"], attrC:["勿忘来时路，不负最初心"], attrD:["不忘初心，牢记使命"] },
+        "春": { attrA:["春风化雨，润物无声"], attrB:["向阳而生，逐光而行"], attrC:["把春天种进泥土里"], attrD:["如春风般，温暖山河"] },
+        "丹": { attrA:["丹心一片，日月可鉴"], attrB:["赤诚热烈，初心如炬"], attrC:["以丹心为笔，写无悔人生"], attrD:["一片丹心，献给祖国"] },
+        "德": { attrA:["德润身，富润屋"], attrB:["厚德载物，上善若水"], attrC:["以德立身，以德服人"], attrD:["明大德，守公德，严私德"] },
+        "东": { attrA:["东方欲晓，莫道君行早"], attrB:["紫气东来，万象更新"], attrC:["迎着东方走，那里有光"], attrD:["日出东方，其道大光"] },
+        "芳": { attrA:["芬芳如兰，气韵自华"], attrB:["赠人玫瑰，手有余香"], attrC:["以芳华，写芳华"], attrD:["遍地芳菲，皆是春晖"] },
+        "飞": { attrA:["飞鸿踏雪，志在千里"], attrB:["风鹏正举，扶摇直上"], attrC:["飞得再高，不忘归巢"], attrD:["展翅九万里，俯瞰山河美"] },
+        "峰": { attrA:["山登绝顶，一览众山小"], attrB:["壁立千仞，无欲则刚"], attrC:["顶峰相见，不负攀登"], attrD:["群山之巅，红旗飘扬"] },
+        "刚": { attrA:["刚毅木讷，近仁"], attrB:["百炼成钢，绕指柔"], attrC:["刚柔并济，进退有度"], attrD:["钢筋铁骨，撑起脊梁"] },
+        "光": { attrA:["光芒万丈，照亮前路"], attrB:["和光同尘，与时舒卷"], attrC:["做一束光，温暖世界"], attrD:["心中有光，脚下有路"] },
+        "国": { attrA:["胸怀家国，志在四方"], attrB:["家国一体，休戚与共"], attrC:["以国为家，以家为国"], attrD:["这名字，就是一份誓言"] },
+        "海": { attrA:["海纳百川，有容乃大"], attrB:["静水流深，滋养万物"], attrC:["面朝大海，春暖花开"], attrD:["向海图强，扬帆远航"] },
+        "浩": { attrA:["浩然之气，充塞天地"], attrB:["心中浩荡，天地宽广"], attrC:["养浩然正气，行人间正道"], attrD:["浩荡东风，吹拂神州"] },
+        "恒": { attrA:["持之以恒，水滴石穿"], attrB:["久久为功，善作善成"], attrC:["日拱一卒，功不唐捐"], attrD:["百年恒心，代代相传"] },
+        "红": { attrA:["红日初升，其道大光"], attrB:["赤子之心，永不褪色"], attrC:["以红色为底，绘多彩人生"], attrD:["那一抹红，是信仰的颜色"] },
+        "宏": { attrA:["宏图大展，前程似锦"], attrB:["志存高远，脚踏实地"], attrC:["宏大处着眼，细微处着手"], attrD:["宏大叙事，由每个人书写"] },
+        "华": { attrA:["风华正茂，挥斥方遒"], attrB:["朴实无华，默默耕耘"], attrC:["以我之华，耀国之华"], attrD:["华夏儿女，风华正茂"] },
+        "辉": { attrA:["辉光日新，其命维新"], attrB:["星火虽微，终成燎原"], attrC:["散发你的光，照亮身边人"], attrD:["与时代同辉，与祖国同行"] },
+        "慧": { attrA:["明慧通达，慧眼如炬"], attrB:["大智若愚，大巧若拙"], attrC:["以智慧心，以实干身"], attrD:["慧聚力量，智创未来"] },
+        "佳": { attrA:["佳期如梦，未来可期"], attrB:["渐入佳境，越来越好"], attrC:["最好的时光，是现在"], attrD:["佳音频传，国泰民安"] },
+        "坚": { attrA:["坚定不移，坚如磐石"], attrB:["坚韧不拔，百折不挠"], attrC:["咬定青山，立根破岩"], attrD:["坚定信仰，坚毅前行"] },
+        "建": { attrA:["建功立业，实干兴邦"], attrB:["默默耕耘，筑梦踏实"], attrC:["一砖一瓦，砌成理想"], attrD:["建设者，是时代的脊梁"] },
+        "健": { attrA:["天行健，君子自强不息"], attrB:["身心健康，向阳生长"], attrC:["野蛮体魄，文明精神"], attrD:["健康中国，有你有我"] },
+        "杰": { attrA:["生当人杰，不负时代"], attrB:["默默蓄力，一鸣惊人"], attrC:["杰出于平凡，伟大于坚持"], attrD:["遍地英雄下夕烟，皆是豪杰"] },
+        "洁": { attrA:["冰清玉洁，一尘不染"], attrB:["清白做人，干净做事"], attrC:["守心如洁，不惹尘埃"], attrD:["清洁之风，吹遍大地"] },
+        "金": { attrA:["金石为开，精诚所至"], attrB:["真金不怕火炼"], attrC:["是金子，就在哪里发光"], attrD:["金色年华，献与金色中国"] },
+        "静": { attrA:["静水流深，从容有度"], attrB:["静以修身，俭以养德"], attrC:["静守初心，行稳致远"], attrD:["岁月静好，因有人负重"] },
+        "军": { attrA:["铁血丹心，纪律如钢"], attrB:["令行禁止，使命必达"], attrC:["若有战，召必回"], attrD:["钢铁长城，有你一份"] },
+        "凯": { attrA:["凯歌高奏，捷报频传"], attrB:["胜不骄败不馁，愈挫愈勇"], attrC:["唱着凯歌，走向远方"], attrD:["凯旋时，山河作证"] },
+        "康": { attrA:["康庄大道，前程似锦"], attrB:["民康物阜，天下太平"], attrC:["走康庄道，做幸福人"], attrD:["国泰民康，吾辈之愿"] },
+        "达": { attrA:["达观天下，胸怀坦荡"], attrB:["通权达变，进退有度"], attrC:["达人达己，兼济天下"], attrD:["四通八达，联通中国"] },
+        "大": { attrA:["大音希声，大象无形"], attrB:["大智若愚，大巧若拙"], attrC:["大处着眼，小处着手"], attrD:["大道之行，天下为公"] },
+        "道": { attrA:["道法自然，从容有度"], attrB:["吾道一以贯之"], attrC:["行道迟迟，行稳致远"], attrD:["人间正道是沧桑"] },
+        "迪": { attrA:["启迪智慧，照亮前路"], attrB:["启人以善，导人以正"], attrC:["以迪为灯，明辨方向"], attrD:["启迪民智，教育兴国"] },
+        "典": { attrA:["典雅庄重，气度不凡"], attrB:["典则俊雅，温润如玉"], attrC:["以典为范，以身作则"], attrD:["经典传承，文化自信"] },
+        "定": { attrA:["坚定如磐，稳如泰山"], attrB:["定而后能静，静而后能安"], attrC:["咬定青山不放松"], attrD:["定力如山，国之大者"] },
+        "栋": { attrA:["栋梁之材，撑起一方"], attrB:["朴实坚韧，默默承重"], attrC:["做一根栋梁，支撑理想"], attrD:["国之栋梁，民族希望"] },
+        "恩": { attrA:["恩深义重，知恩图报"], attrB:["饮水思源，不忘来路"], attrC:["常怀感恩之心"], attrD:["恩情似海，铭记于心"] },
+        "发": { attrA:["发愤图强，奋发有为"], attrB:["厚积薄发，一鸣惊人"], attrC:["出发吧，就现在"], attrD:["发展路上，有你同行"] },
+        "凡": { attrA:["平凡之中，自有光芒"], attrB:["超凡脱俗，与众不同"], attrC:["于平凡处，见不平凡"], attrD:["平凡英雄，最动人心"] },
+        "方": { attrA:["方正不阿，坦荡如砥"], attrB:["智圆行方，进退有据"], attrC:["行方正之道，做正直之人"], attrD:["方向既定，万山无阻"] },
+        "放": { attrA:["放手一搏，敢闯敢试"], attrB:["收放自如，张弛有度"], attrC:["放下包袱，轻装上阵"], attrD:["改革开放，永不停步"] },
+        "丰": { attrA:["丰神俊朗，气宇轩昂"], attrB:["丰盈内心，充实生命"], attrC:["丰己以丰人，成己以成物"], attrD:["五谷丰登，国泰民安"] },
+        "风": { attrA:["风行草偃，自有气场"], attrB:["君子之风，山高水长"], attrC:["乘风破浪，逐光而行"], attrD:["风正好扬帆，奋进正当时"] },
+        "福": { attrA:["福至心灵，笑口常开"], attrB:["惜福感恩，知足常乐"], attrC:["把福气传给更多人"], attrD:["为人民谋幸福"] },
+        "富": { attrA:["富而好礼，贫而乐道"], attrB:["学富五车，才高八斗"], attrC:["富己以学，富人以德"], attrD:["共同富裕，全民所盼"] },
+        "干": { attrA:["干霄凌云，志在高远"], attrB:["埋头苦干，默默耕耘"], attrC:["空谈误国，实干兴邦"], attrD:["干在实处，走在前列"] },
+        "钢": { attrA:["钢筋铁骨，百折不挠"], attrB:["百炼成钢，愈挫愈勇"], attrC:["淬火成钢，砥砺前行"], attrD:["钢铁意志，铸就脊梁"] },
+        "高": { attrA:["高山仰止，景行行止"], attrB:["志存高远，脚踏实地"], attrC:["站得高，看得远"], attrD:["高质量，新发展"] },
+        "歌": { attrA:["高歌猛进，意气风发"], attrB:["长歌当哭，真情流露"], attrC:["唱着歌，走向远方"], attrD:["为时代高歌，为人民放歌"] },
+        "格": { attrA:["格物致知，求真务实"], attrB:["独具一格，与众不同"], attrC:["严格自律，宽以待人"], attrD:["格物致知，知行合一"] },
+        "根": { attrA:["根深叶茂，本固枝荣"], attrB:["落叶归根，饮水思源"], attrC:["扎根大地，向阳生长"], attrD:["扎根人民，扎根土地"] },
+        "功": { attrA:["功崇惟志，业广惟勤"], attrB:["功成不必在我"], attrC:["功在当代，利在千秋"], attrD:["功勋属于人民"] },
+        "古": { attrA:["古风犹存，气韵典雅"], attrB:["博古通今，厚积薄发"], attrC:["以古为镜，可知兴替"], attrD:["古为今用，推陈出新"] },
+        "冠": { attrA:["冠盖群伦，出类拔萃"], attrB:["勇冠三军，舍我其谁"], attrC:["以冠为标，永争一流"], attrD:["冠绝时代，引领风骚"] },
+        "广": { attrA:["广交四海，胸怀天下"], attrB:["集思广益，海纳百川"], attrC:["读万卷书，行万里路"], attrD:["广袤中华，大有可为"] },
+        "贵": { attrA:["贵在坚持，难在坚守"], attrB:["难能可贵，赤子之心"], attrC:["贵有恒，何必三更眠五更起"], attrD:["人民最贵，江山最重"] },
+        "涵": { attrA:["海涵地负，气度恢宏"], attrB:["内涵深厚，虚怀若谷"], attrC:["涵养正气，修身养性"], attrD:["涵养家国情怀"] },
+        "航": { attrA:["领航定向，破浪前行"], attrB:["长风破浪，直挂云帆"], attrC:["航向既定，万水千山"], attrD:["中国号巨轮，扬帆远航"] },
+        "豪": { attrA:["豪情万丈，挥斥方遒"], attrB:["豪迈之中，自有柔情"], attrC:["以豪情赴使命"], attrD:["英雄豪杰，代代辈出"] },
+        "好": { attrA:["好风如水，清景无限"], attrB:["美好心灵，纯净如初"], attrC:["做好每一件小事"], attrD:["好日子是奋斗出来的"] },
+        "和": { attrA:["和光同尘，与时舒卷"], attrB:["心和气平，温润如玉"], attrC:["以和为贵，和而不同"], attrD:["和谐社会，和美中国"] },
+        "河": { attrA:["大河奔流，气势磅礴"], attrB:["静水流深，默默滋养"], attrC:["百川归海，初心不变"], attrD:["大河上下，顿失滔滔"] },
+        "贺": { attrA:["贺之以诚，庆之以心"], attrB:["可喜可贺，未来可期"], attrC:["为每一个进步喝彩"], attrD:["贺盛世，贺华章"] },
+        "衡": { attrA:["平衡有度，进退从容"], attrB:["权衡轻重，明辨是非"], attrC:["保持平衡，稳步前行"], attrD:["均衡发展，全面小康"] },
+        "弘": { attrA:["弘毅宽厚，任重道远"], attrB:["弘扬正气，传承美德"], attrC:["士不可以不弘毅"], attrD:["弘扬主旋律，传播正能量"] },
+        "虹": { attrA:["气贯长虹，气势非凡"], attrB:["雨后彩虹，绚烂绽放"], attrC:["经历风雨，才见彩虹"], attrD:["彩虹总在风雨后"] },
+        "花": { attrA:["花开时节，风华正茂"], attrB:["如花在野，温柔热烈"], attrC:["把花种在心里"], attrD:["花开中国，芬芳世界"] },
+        "欢": { attrA:["欢欣鼓舞，朝气蓬勃"], attrB:["乐观向上，笑对人生"], attrC:["把欢乐传递出去"], attrD:["欢歌笑语，幸福中国"] },
+        "焕": { attrA:["容光焕发，精神抖擞"], attrB:["焕然一新，推陈出新"], attrC:["焕发激情，点燃梦想"], attrD:["万象焕新，时代焕彩"] },
+        "会": { attrA:["会当凌绝顶，一览众山小"], attrB:["融会贯通，知行合一"], attrC:["会聚力量，共创未来"], attrD:["会心一笑，家国同安"] },
+        "火": { attrA:["如火如荼，热情似火"], attrB:["星星之火，可以燎原"], attrC:["以火之热，温暖人间"], attrD:["薪火相传，生生不息"] },
+        "基": { attrA:["基业长青，行稳致远"], attrB:["夯实基础，厚积薄发"], attrC:["万丈高楼平地起"], attrD:["根基在人民，血脉在人民"] },
+        "继": { attrA:["继往开来，承前启后"], attrB:["锲而不舍，持之以恒"], attrC:["继承传统，开创新局"], attrD:["继往圣绝学，开万世太平"] },
+        "加": { attrA:["加鞭快马，只争朝夕"], attrB:["添砖加瓦，聚沙成塔"], attrC:["每天加一点，日积月累"], attrD:["加油中国，加油你我"] },
+        "家": { attrA:["家国情怀，赤子之心"], attrB:["修身齐家，治国平天下"], attrC:["爱家，更爱国"], attrD:["家是最小国，国是千万家"] },
+        "嘉": { attrA:["嘉言懿行，德才兼备"], attrB:["嘉惠于人，润物无声"], attrC:["以嘉言温暖世界"], attrD:["嘉年华章，盛世共享"] },
+        "江": { attrA:["江山如画，气吞万里"], attrB:["长江后浪推前浪"], attrC:["奔流到海不复回"], attrD:["江山就是人民"] },
+        "锦": { attrA:["锦绣前程，繁花似锦"], attrB:["锦心绣口，才华横溢"], attrC:["织就锦绣人生"], attrD:["锦绣中华，壮美如画"] },
+        "进": { attrA:["进取不息，奋斗不止"], attrB:["循序渐进，稳中求进"], attrC:["每天进步一点点"], attrD:["与时偕行，不断前进"] },
+        "晶": { attrA:["晶莹剔透，纯净如初"], attrB:["水晶之心，澄澈透明"], attrC:["做一颗水晶，折射光芒"], attrD:["点点晶莹，汇成星河"] },
+        "景": { attrA:["风景独好，这边独好"], attrB:["高山景行，心向往之"], attrC:["走过万水千山，皆是风景"], attrD:["美丽中国，处处是景"] },
+        "敬": { attrA:["敬天爱人，心存敬畏"], attrB:["敬业乐群，忠于职守"], attrC:["敬人者，人恒敬之"], attrD:["向每一位奋斗者致敬"] },
+        "久": { attrA:["久久为功，善作善成"], attrB:["天长地久，初心不改"], attrC:["日复一日，坚持到底"], attrD:["千秋伟业，久久为功"] },
+        "举": { attrA:["举重若轻，从容不迫"], attrB:["举一反三，触类旁通"], attrC:["举手之劳，温暖他人"], attrD:["举国同心，众志成城"] },
+        "俊": { attrA:["俊采星驰，才华横溢"], attrB:["清俊挺拔，风骨卓然"], attrC:["以俊才报效家国"], attrD:["俊杰辈出，国家之幸"] },
+        "开": { attrA:["开拓进取，敢为人先"], attrB:["继往开来，承前启后"], attrC:["打开格局，拥抱世界"], attrD:["改革开放，永不停歇"] },
+        "剑": { attrA:["剑气如虹，锋芒毕露"], attrB:["十年磨一剑，霜刃未曾试"], attrC:["以剑为笔，书写青春"], attrD:["利剑护国，丹心卫民"] },
+        "姣": { attrA:["姣如明月，清辉照人"], attrB:["静女其姝，温婉如玉"], attrC:["以姣好之心，行美好之事"], attrD:["美好生活，人人向往"] },
+        "捷": { attrA:["捷足先登，快人一步"], attrB:["敏捷如风，反应迅速"], attrC:["捷报频传，再接再厉"], attrD:["捷报飞来当纸钱"] },
+        "瑾": { attrA:["怀瑾握瑜，才华横溢"], attrB:["瑾玉无瑕，品性高洁"], attrC:["以瑾为鉴，正身清心"], attrD:["如瑾如玉，国之栋梁"] },
+        "靖": { attrA:["靖安四方，气度沉稳"], attrB:["靖共尔位，正直是与"], attrC:["以靖为心，安守本分"], attrD:["安靖祥和，国泰民安"] },
+        "娟": { attrA:["娟好静秀，温婉如玉"], attrB:["娟娟细流，汇成江海"], attrC:["以娟秀之心，行温柔之事"], attrD:["涓涓细流，汇入时代洪流"] },
+        "科": { attrA:["科学精神，求真务实"], attrB:["格物致知，探索未知"], attrC:["以科学之名，探真理之光"], attrD:["科技强国，创新驱动"] },
+        "可": { attrA:["可亲可敬，温润如玉"], attrB:["难能可贵，赤子之心"], attrC:["可以平凡，不可平庸"], attrD:["可爱中国，可信中国"] },
+        "兰": { attrA:["空谷幽兰，气韵自华"], attrB:["兰心蕙质，冰清玉洁"], attrC:["如兰之馨，芬芳他人"], attrD:["幽兰在山谷，芳香满人间"] },
+        "乐": { attrA:["乐观向上，笑对人生"], attrB:["知足常乐，助人为乐"], attrC:["把快乐传递给世界"], attrD:["乐以天下，忧以天下"] },
+        "莉": { attrA:["茉莉花开，清香自来"], attrB:["莉香清远，不争春色"], attrC:["如茉莉般，默默绽放"], attrD:["花开中国，芬芳四溢"] },
+        "丽": { attrA:["天生丽质，风华绝代"], attrB:["美丽心灵，纯净如水"], attrC:["以美丽之心，创造美好"], attrD:["美丽中国，你我共建"] },
+        "利": { attrA:["利刃出鞘，锋芒毕露"], attrB:["利人利己，兼济天下"], attrC:["利万物而不争"], attrD:["利民为本，利国为先"] },
+        "莲": { attrA:["莲花出水，不染纤尘"], attrB:["出淤泥而不染，濯清涟而不妖"], attrC:["以莲为镜，守心如洁"], attrD:["清莲之品，君子之风"] },
+        "良": { attrA:["良金美玉，品性纯良"], attrB:["温良恭俭，让以得之"], attrC:["做良心事，做善良人"], attrD:["优良传承，代代不息"] },
+        "亮": { attrA:["亮节高风，光明磊落"], attrB:["明亮如星，指引方向"], attrC:["点亮自己，照亮他人"], attrD:["闪亮的中国，闪亮的你"] },
+        "林": { attrA:["林木葱茏，生机勃勃"], attrB:["独木不林，众志成城"], attrC:["如林而立，扎根大地"], attrD:["绿水青山，就是金山银山"] },
+        "琳": { attrA:["琳琅满目，才华横溢"], attrB:["琳珉美玉，温润无瑕"], attrC:["如琳琅般，璀璨夺目"], attrD:["琳琅中华，物华天宝"] },
+        "玲": { attrA:["玲珑剔透，冰雪聪明"], attrB:["小巧玲珑，大巧若拙"], attrC:["以玲珑心，观世间美"], attrD:["玲珑中国，精巧绝伦"] },
+        "龙": { attrA:["龙腾虎跃，气势如虹"], attrB:["潜龙在渊，蓄势待发"], attrC:["飞龙在天，志在千里"], attrD:["龙的传人，自强不息"] },
+        "璐": { attrA:["璐璐如玉，温润有光"], attrB:["宝璐在怀，不显自华"], attrC:["如璐之洁，守身如玉"], attrD:["如宝如璐，国之珍器"] },
+        "露": { attrA:["露珠晶莹，纯净透明"], attrB:["朝露待日，珍惜时光"], attrC:["如露之清，滋润万物"], attrD:["阳光雨露，滋养中华"] },
+        "梅": { attrA:["梅花香自苦寒来"], attrB:["傲雪凌霜，铁骨冰心"], attrC:["不经一番寒彻骨，怎得梅花扑鼻香"], attrD:["红梅品格，中国精神"] },
+        "美": { attrA:["美人之美，各美其美"], attrB:["美美与共，天下大同"], attrC:["发现美，创造美"], attrD:["美丽中国，美在人心"] },
+        "梦": { attrA:["以梦为马，不负韶华"], attrB:["梦想照亮现实"], attrC:["追梦人，永远年轻"], attrD:["中国梦，我的梦"] },
+        "敏": { attrA:["敏于行而讷于言"], attrB:["聪敏好学，触类旁通"], attrC:["敏于时代，敢立潮头"], attrD:["敏锐洞察，把握机遇"] },
+        "明": { attrA:["光明正大，明辨是非"], attrB:["明心见性，澄澈如镜"], attrC:["用明澈之心看世界"], attrD:["明灯一盏，照亮前路"] },
+        "铭": { attrA:["铭记在心，永志不忘"], attrB:["刻骨铭心，情深义重"], attrC:["铭刻初心，砥砺前行"], attrD:["铭记历史，开创未来"] },
+        "娜": { attrA:["婀娜多姿，风姿绰约"], attrB:["袅袅娜娜，柔中有刚"], attrC:["以娜为美，以柔克刚"], attrD:["多姿多彩，美丽中国"] },
+        "宁": { attrA:["宁静致远，淡泊明志"], attrB:["家国安宁，吾辈所愿"], attrC:["守一份宁静，护一份平安"], attrD:["安宁中国，岁月静好"] },
+        "诺": { attrA:["一诺千金，言出必行"], attrB:["君子一言，驷马难追"], attrC:["许下的诺言，用一生去兑现"], attrD:["承诺于民，服务于民"] },
+        "鹏": { attrA:["鲲鹏展翅，扶摇直上"], attrB:["大鹏一日同风起"], attrC:["扶摇直上九万里"], attrD:["鹏程万里，中国腾飞"] },
+        "平": { attrA:["平易近人，和蔼可亲"], attrB:["公平正直，坦荡无私"], attrC:["平常心，做不凡事"], attrD:["天下太平，人民安康"] },
+        "萍": { attrA:["萍水相逢，皆是缘分"], attrB:["浮萍有根，心有所系"], attrC:["如萍之韧，随遇而安"], attrD:["聚是一团火，散是满天星"] },
+        "琪": { attrA:["琪花瑶草，珍稀美好"], attrB:["玉琪之质，纯洁无瑕"], attrC:["如琪之美，珍视每一天"], attrD:["琪花盛开，中华锦绣"] },
+        "谦": { attrA:["谦谦君子，温润如玉"], attrB:["谦虚谨慎，戒骄戒躁"], attrC:["满招损，谦受益"], attrD:["谦虚使人进步"] },
+        "强": { attrA:["自强不息，奋斗为本"], attrB:["强国有我，请党放心"], attrC:["强大自己，温暖他人"], attrD:["强国路上，有你同行"] },
+        "巧": { attrA:["巧夺天工，心灵手巧"], attrB:["大巧若拙，大辩若讷"], attrC:["巧思妙想，创造美好"], attrD:["工匠精神，巧手筑梦"] },
+        "琴": { attrA:["琴心剑胆，刚柔并济"], attrB:["琴瑟在御，莫不静好"], attrC:["以琴为友，修身养性"], attrD:["琴声悠扬，奏响华章"] },
+        "青": { attrA:["青春正好，风华正茂"], attrB:["青出于蓝而胜于蓝"], attrC:["以青春之我，创青春之国"], attrD:["青春中国，永葆青春"] },
+        "清": { attrA:["清风明月，淡泊明志"], attrB:["清正廉洁，两袖清风"], attrC:["清心寡欲，守正不阿"], attrD:["清朗中国，风清气正"] },
+        "庆": { attrA:["普天同庆，欢欣鼓舞"], attrB:["庆贺盛世，感恩时代"], attrC:["为每一点进步庆祝"], attrD:["国庆家庆，普天同庆"] },
+        "秋": { attrA:["秋水长天，气爽神清"], attrB:["一叶知秋，见微知著"], attrC:["春华秋实，收获成长"], attrD:["秋收万颗子，国富民强"] },
+        "权": { attrA:["权然后知轻重，度然后知长短"], attrB:["权衡利弊，明辨是非"], attrC:["用权为民，用权为公"], attrD:["权为民所用，情为民所系"] },
+        "全": { attrA:["全心全意，全力以赴"], attrB:["十全十美，止于至善"], attrC:["全情投入，全速前进"], attrD:["全面小康，全民共享"] },
+        "然": { attrA:["自然而然，顺其自然"], attrB:["浩然之气，充塞天地"], attrC:["然后知不足，然后能自强"], attrD:["道法自然，天人合一"] },
+        "仁": { attrA:["仁者爱人，胸怀天下"], attrB:["仁心仁术，济世救人"], attrC:["以仁为心，以爱为行"], attrD:["仁政为民，仁德兴邦"] },
+        "日": { attrA:["日新月异，朝气蓬勃"], attrB:["日积月累，水滴石穿"], attrC:["日日新，又日新"], attrD:["日出东方，光耀中华"] },
+        "荣": { attrA:["荣辱不惊，从容淡定"], attrB:["欣欣向荣，蒸蒸日上"], attrC:["以荣为励，再接再厉"], attrD:["繁荣昌盛，国泰民安"] },
+        "如": { attrA:["如意吉祥，心想事成"], attrB:["如切如磋，如琢如磨"], attrC:["如其所示，如其本来"], attrD:["如愿以偿，中国梦圆"] },
+        "瑞": { attrA:["瑞雪兆丰年，吉祥如意"], attrB:["祥瑞之气，润物无声"], attrC:["以瑞为兆，以诚为基"], attrD:["瑞气东来，国运昌隆"] },
+        "润": { attrA:["润物细无声，春风化雨"], attrB:["温润如玉，谦谦君子"], attrC:["以润为德，滋养万物"], attrD:["润泽中华，惠及万民"] },
+        "山": { attrA:["山登绝顶，一览众山小"], attrB:["仁者乐山，厚重沉稳"], attrC:["如山而立，岿然不动"], attrD:["江山如此多娇"] },
+        "珊": { attrA:["姗姗来迟，终将绽放"], attrB:["珊瑚在网，才华出众"], attrC:["如珊之美，珍贵独特"], attrD:["珊珊可爱，中华之美"] },
+        "善": { attrA:["上善若水，利万物而不争"], attrB:["善始善终，善作善成"], attrC:["勿以善小而不为"], attrD:["善良中国，温润世界"] },
+        "生": { attrA:["生生不息，薪火相传"], attrB:["生如夏花，绚烂绽放"], attrC:["生逢盛世，不负韶华"], attrD:["为生民立命，为万世开太平"] },
+        "胜": { attrA:["胜利在望，信心满怀"], attrB:["胜不骄，败不馁"], attrC:["战胜自己，就是胜利"], attrD:["从胜利走向新的胜利"] },
+        "诗": { attrA:["诗意栖居，浪漫从容"], attrB:["腹有诗书气自华"], attrC:["以诗为马，驰骋远方"], attrD:["诗意中国，如画江山"] },
+        "书": { attrA:["书香门第，气韵自华"], attrB:["书山有路勤为径"], attrC:["读万卷书，行万里路"], attrD:["书香中国，文明传承"] },
+        "舒": { attrA:["舒卷自如，从容不迫"], attrB:["云舒霞卷，开阔胸襟"], attrC:["舒心生活，舒展人生"], attrD:["舒展中国，气象万千"] },
+        "帅": { attrA:["帅气十足，英姿勃发"], attrB:["帅以正，孰敢不正"], attrC:["以身作则，率先垂范"], attrD:["将帅之才，国之栋梁"] },
+        "爽": { attrA:["爽朗大方，豪气干云"], attrB:["秋高气爽，心旷神怡"], attrC:["爽快做人，踏实做事"], attrD:["风清气爽，朗朗乾坤"] },
+        "顺": { attrA:["顺风顺水，一帆风顺"], attrB:["顺其自然，水到渠成"], attrC:["顺势而为，乘势而上"], attrD:["顺应时代，顺应民心"] },
+        "思": { attrA:["思接千载，视通万里"], attrB:["深思熟虑，谋定后动"], attrC:["吾日三省吾身"], attrD:["思民之所思，忧民之所忧"] },
+        "松": { attrA:["松柏长青，傲雪凌霜"], attrB:["岁寒知松柏，患难见真情"], attrC:["如松之劲，如松之韧"], attrD:["松柏精神，中国脊梁"] },
+        "涛": { attrA:["惊涛拍岸，卷起千堆雪"], attrB:["心潮逐浪，热血难凉"], attrC:["乘风破浪，勇立潮头"], attrD:["时代大潮，滚滚向前"] },
+        "天": { attrA:["天行健，君子自强不息"], attrB:["天高地迥，觉宇宙之无穷"], attrC:["脚踏实地，仰望星空"], attrD:["天下为公，世界大同"] },
+        "田": { attrA:["田园风光，朴实温暖"], attrB:["深耕细作，默默耕耘"], attrC:["像土地一样，厚德载物"], attrD:["希望的田野，丰收中国"] },
+        "婷": { attrA:["亭亭玉立，向阳而生"], attrB:["静女其姝，柔韧坚守"], attrC:["以婷立之姿，迎风雨而立"], attrD:["亭亭如盖，荫庇一方"] },
+        "通": { attrA:["通权达变，灵活应变"], attrB:["融会贯通，触类旁通"], attrC:["沟通世界，连接你我"], attrD:["四通八达，联通中国"] },
+        "同": { attrA:["同心同德，同舟共济"], attrB:["和而不同，求同存异"], attrC:["同呼吸，共命运"], attrD:["同心共筑中国梦"] },
+        "彤": { attrA:["彤云密布，霞光满天"], attrB:["彤管有炜，光彩照人"], attrC:["如彤之热，温暖人心"], attrD:["红彤彤的中国，红火火的日子"] },
+        "薇": { attrA:["蔷薇花开，芬芳满园"], attrB:["采薇之志，高洁不俗"], attrC:["如薇之韧，迎风绽放"], attrD:["蔷薇遍地，花开中国"] },
+        "伟": { attrA:["雄伟壮丽，气吞山河"], attrB:["丰功伟绩，始于平凡"], attrC:["做伟大的小事"], attrD:["伟大复兴，中国梦圆"] },
+        "玮": { attrA:["玮器之才，堪当大任"], attrB:["玮宝之珍，国之重器"], attrC:["以玮为志，以才报国"], attrD:["玮宝中华，璀璨夺目"] },
+        "卫": { attrA:["保家卫国，赤胆忠心"], attrB:["卫生报国，守护健康"], attrC:["保卫美好，捍卫信仰"], attrD:["卫国戍边，寸土不让"] },
+        "文": { attrA:["文以载道，以文化人"], attrB:["文质彬彬，然后君子"], attrC:["以文为笔，书写时代"], attrD:["文化自信，文明传承"] },
+        "雯": { attrA:["雯华如梦，绚丽多彩"], attrB:["云雯之美，变幻无穷"], attrC:["如雯之彩，点亮生活"], attrD:["五彩雯华，美丽中国"] },
+        "稳": { attrA:["稳如泰山，处变不惊"], attrB:["行稳致远，稳中求进"], attrC:["稳住心态，稳步前行"], attrD:["稳中向好，行稳致远"] },
+        "武": { attrA:["文武双全，刚柔并济"], attrB:["止戈为武，以武维和"], attrC:["尚武精神，自强不息"], attrD:["威武之师，守护和平"] },
+        "曦": { attrA:["晨曦初露，希望之光"], attrB:["曦光微明，温暖如初"], attrC:["如曦之光，照亮前路"], attrD:["晨曦中国，朝气蓬勃"] },
+        "霞": { attrA:["霞光万道，瑞气千条"], attrB:["落霞与孤鹜齐飞，秋水共长天一色"], attrC:["如霞之绚，绽放光彩"], attrD:["朝霞满天，中国红遍"] },
+        "先": { attrA:["敢为人先，开拓进取"], attrB:["先天下之忧而忧"], attrC:["身先士卒，率先垂范"], attrD:["先锋力量，引领时代"] },
+        "贤": { attrA:["贤良方正，德才兼备"], attrB:["见贤思齐，见不贤内自省"], attrC:["以贤为镜，正身修德"], attrD:["选贤任能，国家之幸"] },
+        "香": { attrA:["香远益清，芬芳四溢"], attrB:["赠人玫瑰，手有余香"], attrC:["如香之远，德行远播"], attrD:["书香中国，芬芳世界"] },
+        "祥": { attrA:["吉祥如意，瑞气盈门"], attrB:["祥和之气，润物无声"], attrC:["以祥为愿，以和为贵"], attrD:["祥和中国，盛世太平"] },
+        "翔": { attrA:["翱翔天际，志在四方"], attrB:["凤翥龙翔，气度不凡"], attrC:["如鹰之翔，志存高远"], attrD:["飞得更高，中国腾飞"] },
+        "晓": { attrA:["晓风残月，清新脱俗"], attrB:["晓以大义，明辨是非"], attrC:["破晓而行，迎光而走"], attrD:["春眠不觉晓，处处闻啼鸟"] },
+        "心": { attrA:["心怀天下，志在四方"], attrB:["不忘初心，方得始终"], attrC:["用心做人，用心做事"], attrD:["民心所向，国之大者"] },
+        "欣": { attrA:["欣欣向荣，蒸蒸日上"], attrB:["欣然自得，知足常乐"], attrC:["欣然接受，欣然前行"], attrD:["欢欣鼓舞，盛世中国"] },
+        "新": { attrA:["日新月异，万象更新"], attrB:["推陈出新，革故鼎新"], attrC:["苟日新，日日新"], attrD:["新时代，新征程"] },
+        "馨": { attrA:["馨香如兰，德馨远播"], attrB:["明德惟馨，以德服人"], attrC:["如馨之德，温润人心"], attrD:["馨香中国，德润人心"] },
+        "星": { attrA:["星光不问赶路人"], attrB:["聚是一团火，散是满天星"], attrC:["做一颗星，照亮夜空"], attrD:["星辰大海，中国征途"] },
+        "兴": { attrA:["兴高采烈，意气风发"], attrB:["大兴实干之风"], attrC:["兴利除弊，兴国安邦"], attrD:["伟大复兴，举国同兴"] },
+        "秀": { attrA:["秀外慧中，钟灵毓秀"], attrB:["木秀于林，风必摧之"], attrC:["秀出风采，秀出自信"], attrD:["秀美中国，山川如画"] },
+        "旭": { attrA:["旭日东升，朝气蓬勃"], attrB:["旭日之辉，温暖如春"], attrC:["如旭之升，蒸蒸日上"], attrD:["旭日中国，光芒万丈"] },
+        "轩": { attrA:["气宇轩昂，器宇不凡"], attrB:["轩冕之志，淡泊之心"], attrC:["以轩为志，以实为基"], attrD:["轩辕子孙，龙的传人"] },
+        "学": { attrA:["学以致用，知行合一"], attrB:["学海无涯，学无止境"], attrC:["活到老，学到老"], attrD:["学习强国，智慧兴邦"] },
+        "雪": { attrA:["冰雪聪明，晶莹剔透"], attrB:["瑞雪兆丰年，纯洁无瑕"], attrC:["如雪之洁，守身如玉"], attrD:["雪飘中国，银装素裹"] },
+        "雅": { attrA:["温文尔雅，气韵自华"], attrB:["雅量高致，虚怀若谷"], attrC:["以雅为美，以雅为德"], attrD:["大雅中国，文明之邦"] },
+        "妍": { attrA:["百花争妍，绚丽绽放"], attrB:["妍姿艳质，内外兼修"], attrC:["如妍之美，自信从容"], attrD:["百花妍放，春满中国"] },
+        "燕": { attrA:["燕子归来，春回大地"], attrB:["燕雀安知鸿鹄之志"], attrC:["如燕之勤，筑巢圆梦"], attrD:["燕舞莺歌，盛世祥和"] },
+        "阳": { attrA:["阳光普照，温暖如春"], attrB:["阳刚之气，正气凛然"], attrC:["向阳而生，逐光而行"], attrD:["阳光中国，光明磊落"] },
+        "洋": { attrA:["汪洋大海，胸怀宽广"], attrB:["大洋彼岸，放眼世界"], attrC:["如洋之阔，海纳百川"], attrD:["远洋航行，中国扬帆"] },
+        "瑶": { attrA:["瑶林琼树，珍贵美好"], attrB:["瑶台银阙，高洁脱俗"], attrC:["如瑶之珍，守身如玉"], attrD:["瑶池仙境，大美中国"] },
+        "一": { attrA:["一马当先，敢为人先"], attrB:["一心一意，始终如一"], attrC:["从一而终，善始善终"], attrD:["一面旗帜，一生追寻"] },
+        "怡": { attrA:["心旷神怡，神清气爽"], attrB:["怡然自得，知足常乐"], attrC:["以怡为心，以悦为行"], attrD:["怡然中国，乐享太平"] },
+        "义": { attrA:["义薄云天，气冲霄汉"], attrB:["见义勇为，舍生取义"], attrC:["义之所在，虽千万人吾往矣"], attrD:["正义中国，公道人心"] },
+        "毅": { attrA:["坚毅果敢，勇往直前"], attrB:["弘毅宽厚，任重道远"], attrC:["士不可以不弘毅"], attrD:["刚毅坚卓，民族品格"] },
+        "英": { attrA:["英雄气概，豪气干云"], attrB:["英姿飒爽，巾帼不让须眉"], attrC:["英杰辈出，代代相传"], attrD:["遍地英雄下夕烟"] },
+        "莹": { attrA:["晶莹剔透，纯净透明"], attrB:["莹莹如玉，温润有光"], attrC:["如莹之洁，守心如玉"], attrD:["莹莹之光，汇成星河"] },
+        "颖": { attrA:["颖悟绝伦，聪明伶俐"], attrB:["脱颖而出，锋芒初露"], attrC:["以颖为刃，劈开迷雾"], attrD:["聪颖之才，国之栋梁"] },
+        "勇": { attrA:["勇立潮头，敢为人先","无畏风雨，挺身向前"], attrB:["刚毅果敢，百折不挠","狭路相逢勇者胜"], attrC:["逢山开路，遇水架桥"], attrD:["勇者无畏，大国担当"] },
+        "优": { attrA:["优秀卓越，出类拔萃"], attrB:["品学兼优，德才兼备"], attrC:["追求优秀，永不止步"], attrD:["优秀中国，卓越民族"] },
+        "宇": { attrA:["气宇轩昂，胸怀寰宇"], attrB:["宇量深广，海纳百川"], attrC:["心怀宇宙，脚踏实地"], attrD:["大宇中国，气吞山河"] },
+        "玉": { attrA:["玉树临风，温润如玉"], attrB:["宁为玉碎，不为瓦全"], attrC:["如切如磋，如琢如磨"], attrD:["玉成中国，温润世界"] },
+        "媛": { attrA:["名媛淑女，温婉大方"], attrB:["媛德贤良，内外兼修"], attrC:["以媛为范，以德为行"], attrD:["美好生活，优雅中国"] },
+        "月": { attrA:["月明如水，清辉照人"], attrB:["花好月圆，人间美满"], attrC:["如月之恒，如日之升"], attrD:["月是故乡明，国是心中根"] },
+        "云": { attrA:["云程发轫，万里可期"], attrB:["云淡风轻，从容不迫"], attrC:["行到水穷处，坐看云起时"], attrD:["风云际会，中国时代"] },
+        "泽": { attrA:["泽被万物，润物无声"], attrB:["温润而泽，仁者爱人"], attrC:["以泽为德，惠及他人"], attrD:["恩泽中华，润泽万民"] },
+        "章": { attrA:["出口成章，才华横溢"], attrB:["文章千古事，得失寸心知"], attrC:["谱写人生华章"], attrD:["锦绣文章，壮美中国"] },
+        "昭": { attrA:["昭如日月，光明磊落"], attrB:["昭昭之明，赫赫之功"], attrC:["以昭为鉴，明辨是非"], attrD:["昭示未来，光明在前"] },
+        "哲": { attrA:["哲思深远，洞见本质"], attrB:["明哲保身，以退为进"], attrC:["以哲之思，解人生之惑"], attrD:["哲思中国，智慧民族"] },
+        "真": { attrA:["真诚以待，真心实意"], attrB:["返璞归真，不忘初心"], attrC:["做真实的自己"], attrD:["真实中国，真诚可信"] },
+        "正": { attrA:["正气凛然，刚正不阿"], attrB:["正大光明，坦荡无私"], attrC:["走正道，做正事"], attrD:["正义必胜，正道不孤"] },
+        "志": { attrA:["志存高远，心怀天下","心之所向，素履以往"], attrB:["矢志不渝，笃行不怠","以志为马，不负韶华"], attrC:["逢山开路，遇水架桥"], attrD:["志向所指，即为中国方向"] },
+        "智": { attrA:["智圆行方，大智若愚"], attrB:["智者不惑，仁者不忧"], attrC:["以智慧之光照亮前路"], attrD:["智慧中国，创新驱动"] },
+        "忠": { attrA:["忠心耿耿，赤胆忠心"], attrB:["忠于职守，忠于信仰"], attrC:["忠于心，诚于行"], attrD:["忠党爱国，赤子情怀"] },
+        "舟": { attrA:["逆水行舟，不进则退"], attrB:["同舟共济，众志成城"], attrC:["学海无涯苦作舟"], attrD:["中国巨轮，破浪前行"] },
+        "卓": { attrA:["卓越不凡，卓尔不群"], attrB:["远见卓识，洞察先机"], attrC:["追求卓越，永不止步"], attrD:["卓越中国，引领时代"] }
+    };
+
+    const fallbackGene = {
+        attrA: ["赤诚热烈，初心如炬","朴实无华，至真至纯","平凡之中，自有光芒"],
+        attrB: ["默默耕耘，静待花开","坚守本心，方得始终","不争不抢，自有力量"],
+        attrC: ["一步一印，行稳致远","做好自己，温暖他人"],
+        attrD: ["无名亦有名，平凡亦英雄","每一份微光，都值得被看见"]
+    };
+
+    // ============ 20套诗文模板 ============
+    const poemTemplates = [
+        // A类：古风词牌型
+        `《{姓氏}氏志》\n{第一字}山{第二字}水之间，一片丹心在此间。\n生来有{attrA}，\n修得{attrB}。\n莫问前程几许，只顾风雨兼程。\n是为{全名}，是为信仰。`,
+        `{全名}·铭\n名者，命也。父母赐我以名，我以此名立志。\n愿有{attrA}之胸怀，\n亦有{attrB}之坚守。\n以此铭志，以此践行。`,
+        `行香子·{全名}\n{第一字}字当头，{第二字}字为骨。\n这一生，{attrA}，{attrB}。\n不负韶华，不负时代。\n行遍山河，此心依旧。`,
+        `七律·名志\n父母赐名寄此生，{第一字}心{第二字}骨两相成。\n{attrA}为底色，\n{attrB}作明灯。\n千秋家国一身系，万里山河寸心承。\n且看{全名}行处，步步生莲步步澄。`,
+        `满江红·{全名}\n名中有{第一字}，当有{attrA}之气概；\n名中有{第二字}，须怀{attrB}之深情。\n壮志在胸，初心在握。\n待从头，携手新长征，朝天阙。`,
+        
+        // B类：现代诗型
+        `如果名字是一粒种子，\n就把它种在春天的土壤里。\n它会开出“{attrA}”的花，\n结出“{attrB}”的果。\n我叫{全名}，\n这是我和这片土地的约定。`,
+        `亲爱的{全名}：\n你名字里的{第一字}，是风的形状；\n你名字里的{第二字}，是山的重量。\n愿你带着{attrC}去行走，\n带着{attrD}去相信。`,
+        `{全名}，\n你的名字是星辰，{attrA}；\n你的名字也是大地，{attrB}。\n仰望星空时，不忘脚踏实地。\n这就是你名字的意义。`,
+        `很多年前，有人写下你的名字，\n把{attrA}和{attrB}，\n一起藏进了这两个字里。\n很多年后，你读懂了它。\n{全名}，\n这是时间给你的礼物。`,
+        `{全名}，你好。\n你问名字的意义？\n我想，大概是——\n以{第一字}之{attrA}，\n以{第二字}之{attrB}，\n在这个时代，写下你自己的答案。`,
+        
+        // C类：青春宣言型
+        `我是{全名}。\n我的青春，有{attrA}的豪迈，\n也有{attrC}的担当。\n生逢盛世，重任在肩。\n以我之名，向党报到！\n以我之志，向未来报到！`,
+        `如果有人问，你是谁？\n{全名}这样回答——\n我是{attrA}的践行者，\n是{attrB}的传承人。\n我的名字很小，但我的信仰很大。\n这就是我的回答。`,
+        `{全名}，出发吧！\n带上{第一字}的{attrA}，\n带上{第二字}的{attrB}。\n前方有光，脚下有路。\n以青春之名，赴时代之约。`,
+        `请以{全名}的名义起誓：\n永葆{attrA}之心，\n坚守{attrB}之志。\n百年风云，不过序章。\n新的百年，我来了！`,
+        `{全名}的战歌：\n以{第一字}为旗，{attrA}；\n以{第二字}为剑，{attrB}。\n逢山开路，遇水架桥。\n这，就是我的信仰战歌！`,
+        
+        // D类：家书型
+        `亲爱的{全名}：\n当你写下名字时，\n就写下了一份承诺。\n愿你永远保持{attrB}的初心，\n用{attrC}去丈量世界。\n名字是父母给的，\n信仰是自己选的。\n爱你的人，于2026年7月1日。`,
+        `{全名}，你好。\n我是多年后的你。\n我想告诉你——\n你名字里的{attrA}，我守住了；\n你名字里的{attrB}，我做到了。\n谢谢你的名字，让我成为今天的我。`,
+        `致{全名}：\n愿你如{第一字}，{attrA}；\n愿你如{第二字}，{attrB}。\n愿你走过千山万水，\n归来仍是少年。\n愿你与时代同行，\n不负此生。`,
+        `我的名字叫{全名}。\n{第一字}是从祖辈那里继承的{attrA}，\n{第二字}是从父辈那里接过的{attrB}。\n现在，轮到我了。\n我会把这份信仰，继续传下去。`,
+        `{全名}，记住——\n你有{attrA}的底色，\n也有{attrB}的力量。\n这世界很大，诱惑很多。\n但你的名字会提醒你：\n你是谁，从哪里来，要去哪里。`
+    ];
+
+    function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function decodeName(name) {
+        let firstChar = name.charAt(0);
+        let secondChar = name.charAt(1) || name.charAt(0);
+        let thirdChar = name.charAt(2) || null;
+
+        let gene1 = geneLib[secondChar] || fallbackGene;
+        let gene2 = thirdChar ? (geneLib[thirdChar] || fallbackGene) : null;
+
+        let attrA = pickRandom(gene1.attrA);
+        let attrB = gene2 ? pickRandom(gene2.attrB) : pickRandom(gene1.attrB);
+        let attrC = pickRandom(gene1.attrC);
+        let attrD = gene2 ? pickRandom(gene2.attrD) : pickRandom(gene1.attrD);
+
+        let template = pickRandom(poemTemplates);
+        let surname = firstChar;
+        let firstName = name.slice(1) || name;
+        let firstWord = firstName.charAt(0);
+        let secondWord = firstName.charAt(1) || firstWord;
+
+        let poem = template
+            .replace(/{姓氏}/g, surname)
+            .replace(/{全名}/g, name)
+            .replace(/{第一字}/g, firstWord)
+            .replace(/{第二字}/g, secondWord)
+            .replace(/{attrA}/g, attrA)
+            .replace(/{attrB}/g, attrB)
+            .replace(/{attrC}/g, attrC)
+            .replace(/{attrD}/g, attrD);
+
+        return { attrA, attrB, attrC, attrD, poem };
+    }
+
+    // ============ 页面切换 ============
+    function goToPage(pageNum) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + pageNum).classList.add('active');
+    }
+
+    // ============ 开始解码 ============
+    function startDecode() {
+        let nameInput = document.getElementById('nameInput');
+        let name = nameInput.value.trim();
+
+        if (!name || name.length < 2) {
+            alert('请写下你的完整姓名（至少2个汉字）');
+            return;
+        }
+
+        goToPage(3);
+
+        let decodingTexts = [
+            "正在解析姓名中的信仰序列……",
+            "检测到红色基因，纯度极高……",
+            "跨越百年的精神密码，正在解锁……"
+        ];
+        let textIndex = 0;
+        let textInterval = setInterval(() => {
+            textIndex = (textIndex + 1) % decodingTexts.length;
+            document.getElementById('decodingText').textContent = decodingTexts[textIndex];
+        }, 800);
+
+        setTimeout(() => {
+            clearInterval(textInterval);
+            let result = decodeName(name);
+
+            document.getElementById('reportName').textContent = name;
+            document.getElementById('reportAttrA').textContent = result.attrA;
+            document.getElementById('reportAttrB').textContent = result.attrB;
+            document.getElementById('reportPoem').textContent = result.poem;
+            document.getElementById('reportSeal').textContent = name;
+
+            document.getElementById('posterPoem').textContent = result.poem;
+            document.getElementById('posterSeal').textContent = name;
+
+            goToPage(4);
+        }, 2000);
+    }
+
+    // ============ 海报导出为图片 ============
+    async function exportPoster() {
+        const posterElement = document.getElementById('posterExportArea');
+
+        try {
+            const dataUrl = await htmlToImage.toPng(posterElement, {
+                quality: 1,
+                pixelRatio: 2
+            });
+
+            const link = document.createElement('a');
+            link.download = '我的红色基因海报.png';
+            link.href = dataUrl;
+            link.click();
+        } catch (error) {
+            console.error('导出失败:', error);
+            alert('海报生成失败，请重试');
+        }
+    }
+
+    document.getElementById('btnSave').addEventListener('click', exportPoster);
+
+    document.getElementById('nameInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') startDecode();
+    });
+</script>
+
+</body>
+</html>
