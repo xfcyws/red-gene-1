@@ -42,11 +42,11 @@
             width: 85%;
             max-width: 360px;
             aspect-ratio: 7/10;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             position: relative;
             overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
         }
 
         .poster-img {
@@ -66,11 +66,11 @@
             background: linear-gradient(135deg, 
                 transparent 0%,
                 transparent 35%,
-                rgba(255, 255, 255, 0.1) 40%,
-                rgba(255, 255, 255, 0.4) 45%,
+                rgba(255, 255, 255, 0.08) 40%,
+                rgba(255, 255, 255, 0.35) 45%,
                 rgba(255, 255, 255, 0.5) 50%,
-                rgba(255, 255, 255, 0.4) 55%,
-                rgba(255, 255, 255, 0.1) 60%,
+                rgba(255, 255, 255, 0.35) 55%,
+                rgba(255, 255, 255, 0.08) 60%,
                 transparent 65%,
                 transparent 100%);
             animation: sweepLight 4s ease-in-out infinite;
@@ -84,230 +84,262 @@
         }
 
         .cover-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
             text-shadow: 0 0 20px rgba(255,215,0,0.5);
         }
 
         .cover-subtitle {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: rgba(255,215,0,0.8);
-            margin-bottom: 35px;
+            margin-bottom: 40px;
+            letter-spacing: 1px;
         }
 
         .btn-start {
-            background: #FFD700;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #8B0000;
             border: none;
-            padding: 15px 60px;
-            font-size: 1.3rem;
+            padding: 16px 64px;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 50px;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
-        .btn-start:active { transform: scale(0.95); }
+        .btn-start:active { 
+            transform: scale(0.96); 
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
 
         /* ========== 第2页：输入页 ========== */
         .compass-img {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-            opacity: 0.85;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 35px;
+            opacity: 0.9;
         }
 
         .input-guide {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: rgba(255,215,0,0.7);
-            margin-bottom: 25px;
-            line-height: 1.8;
+            margin-bottom: 30px;
+            line-height: 2;
+            letter-spacing: 1px;
         }
 
         .input-box {
             width: 75%;
             max-width: 280px;
-            height: 55px;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid #FFD700;
-            border-radius: 25px;
+            height: 56px;
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(255,215,0,0.6);
+            border-radius: 28px;
             color: #FFD700;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             text-align: center;
             outline: none;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            transition: border-color 0.3s, background 0.3s;
         }
 
-        .input-box::placeholder { color: rgba(255,215,0,0.3); font-size: 1.2rem; }
+        .input-box:focus {
+            border-color: #FFD700;
+            background: rgba(255,255,255,0.12);
+        }
+
+        .input-box::placeholder { 
+            color: rgba(255,215,0,0.3); 
+            font-size: 1.1rem; 
+        }
 
         .btn-decode {
-            background: #FFD700;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #8B0000;
             border: none;
-            padding: 14px 50px;
-            font-size: 1.3rem;
+            padding: 14px 48px;
+            font-size: 1.2rem;
             font-weight: bold;
             border-radius: 50px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* ========== 第3页：解码动画（静态党徽，不旋转） ========== */
+        /* ========== 第3页：解码动画 ========== */
         .emblem-static {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 40px;
-            /* 无动画 */
+            width: 100px;
+            height: 100px;
+            margin-bottom: 50px;
         }
 
         .decoding-text {
-            font-size: 1rem;
-            color: rgba(255,215,0,0.7);
-            margin-top: 20px;
+            font-size: 0.95rem;
+            color: rgba(255,215,0,0.6);
+            letter-spacing: 1px;
         }
 
         /* ========== 第4页：结果页 ========== */
         .report-card {
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255,255,255,0.08);
-            border: 2px solid #FFD700;
-            border-radius: 15px;
-            padding: 30px 20px;
+            width: 88%;
+            max-width: 380px;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,215,0,0.5);
+            border-radius: 18px;
+            padding: 35px 25px;
             position: relative;
+            backdrop-filter: blur(2px);
         }
 
         .report-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            letter-spacing: 3px;
-            border-bottom: 1px solid rgba(255,215,0,0.3);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
+            letter-spacing: 4px;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+            padding-bottom: 18px;
+            margin-bottom: 22px;
         }
 
         .report-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            font-size: 1rem;
+            align-items: center;
+            padding: 12px 0;
+            font-size: 0.95rem;
         }
 
-        .report-item .label { color: rgba(255,215,0,0.7); }
-        .report-item .value { font-weight: bold; }
+        .report-item .label { 
+            color: rgba(255,215,0,0.65); 
+            letter-spacing: 1px;
+        }
+        .report-item .value { 
+            font-weight: 600; 
+            text-align: right;
+            max-width: 60%;
+            line-height: 1.5;
+        }
 
         .report-poem {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,215,0,0.3);
-            font-size: 1.1rem;
-            line-height: 2;
-            font-style: italic;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,215,0,0.2);
+            font-size: 1.05rem;
+            line-height: 2.2;
             white-space: pre-line;
+            letter-spacing: 1px;
         }
 
         .report-seal {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 70px; height: 70px;
-            border: 2px solid #FF0000;
+            bottom: 18px;
+            right: 18px;
+            width: 68px; height: 68px;
+            border: 2px solid #CC0000;
             border-radius: 50%;
-            color: #FF0000;
-            font-size: 1rem;
+            color: #CC0000;
+            font-size: 0.95rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             transform: rotate(-15deg);
-            opacity: 0.8;
+            opacity: 0.85;
         }
 
         .btn-poster {
-            margin-top: 25px;
-            background: #FFD700;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
             color: #8B0000;
             border: none;
-            padding: 14px 40px;
-            font-size: 1.2rem;
+            padding: 14px 42px;
+            font-size: 1.15rem;
             font-weight: bold;
             border-radius: 50px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
 
         /* ========== 第5页：海报预览 ========== */
         .poster-preview {
-            width: 85%;
-            max-width: 360px;
+            width: 82%;
+            max-width: 340px;
             aspect-ratio: 7/10;
-            background: linear-gradient(135deg, #8B0000, #C41E3A, #8B0000);
-            border: 3px solid #FFD700;
-            border-radius: 10px;
+            background: linear-gradient(160deg, #8B0000 0%, #B22222 40%, #8B0000 100%);
+            border: 2px solid rgba(255,215,0,0.6);
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 28px 24px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 35px rgba(0,0,0,0.4);
         }
 
         .poster-watermark {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.04)"/></svg>');
             pointer-events: none;
         }
 
         .poster-poem {
-            font-size: 1.1rem;
-            line-height: 2.2;
-            text-shadow: 0 0 10px rgba(255,215,0,0.3);
+            font-size: 1.05rem;
+            line-height: 2.4;
+            text-shadow: 0 0 12px rgba(255,215,0,0.25);
             z-index: 1;
             white-space: pre-line;
             text-align: center;
+            letter-spacing: 1px;
         }
 
         .poster-seal {
-            margin-top: 30px;
-            width: 80px; height: 80px;
-            border: 3px solid #FF0000;
+            margin-top: 35px;
+            width: 76px; height: 76px;
+            border: 3px solid #CC0000;
             border-radius: 50%;
-            color: #FF0000;
-            font-size: 1.3rem;
+            color: #CC0000;
+            font-size: 1.2rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
             transform: rotate(-15deg);
             z-index: 1;
+            opacity: 0.9;
         }
 
         .btn-share {
-            margin-top: 25px;
+            margin-top: 28px;
             background: transparent;
             color: #FFD700;
-            border: 2px solid #FFD700;
-            padding: 12px 35px;
+            border: 2px solid rgba(255,215,0,0.6);
+            padding: 12px 36px;
             font-size: 1rem;
             border-radius: 50px;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             cursor: pointer;
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        .btn-share:active { opacity: 0.7; }
+        .btn-share:active { 
+            background: rgba(255,215,0,0.1);
+            border-color: #FFD700;
+        }
 
-        .poster-preview canvas {
+        .poster-preview img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: 14px;
         }
     </style>
 </head>
@@ -339,7 +371,7 @@
         <button class="btn-decode" onclick="startDecode()">启封 · 基因鉴定</button>
     </div>
 
-    <!-- 第3页：解码动画（静态党徽） -->
+    <!-- 第3页：解码动画 -->
     <div class="page" id="page3">
         <img src="images/party-emblem.png" alt="党徽" class="emblem-static">
         <div class="decoding-text" id="decodingText">
@@ -368,7 +400,7 @@
                 <span class="value">100%热爱</span>
             </div>
             <div class="report-poem" id="reportPoem">---</div>
-            <div class="report-item" style="margin-top:15px; font-size:0.9rem; color:rgba(255,215,0,0.5);">
+            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);">
                 <span>鉴定单位：红色基因研究中心</span>
                 <span>2026年7月1日</span>
             </div>
@@ -385,7 +417,7 @@
             <div class="poster-seal" id="posterSeal">---</div>
         </div>
         <button class="btn-share" id="btnSave">保存并分享</button>
-        <button class="btn-share" style="margin-top:10px;" onclick="goToPage(1)">重新鉴定</button>
+        <button class="btn-share" style="margin-top:12px;" onclick="goToPage(1)">重新鉴定</button>
     </div>
 
 </div>
@@ -628,7 +660,7 @@
         attrD: ["无名亦有名，平凡亦英雄","每一份微光，都值得被看见"]
     };
 
-    // 20套诗文模板（已修改第18条，去掉“愿你如X”的生硬表达）
+    // 20套诗文模板（已修改第7条，动态属性匹配名字）
     const poemTemplates = [
         `《{姓氏}氏志》\n{第一字}山{第二字}水之间，一片丹心在此间。\n生来有{attrA}，\n修得{attrB}。\n莫问前程几许，只顾风雨兼程。\n是为{全名}，是为信仰。`,
         `{全名}·铭\n名者，命也。父母赐我以名，我以此名立志。\n愿有{attrA}之胸怀，\n亦有{attrB}之坚守。\n以此铭志，以此践行。`,
@@ -636,7 +668,7 @@
         `七律·名志\n父母赐名寄此生，{第一字}心{第二字}骨两相成。\n{attrA}为底色，\n{attrB}作明灯。\n千秋家国一身系，万里山河寸心承。\n且看{全名}行处，步步生莲步步澄。`,
         `满江红·{全名}\n名中有{第一字}，当有{attrA}之气概；\n名中有{第二字}，须怀{attrB}之深情。\n壮志在胸，初心在握。\n待从头，携手新长征，朝天阙。`,
         `如果名字是一粒种子，\n就把它种在春天的土壤里。\n它会开出“{attrA}”的花，\n结出“{attrB}”的果。\n我叫{全名}，\n这是我和这片土地的约定。`,
-        `亲爱的{全名}：\n你名字里的{第一字}，是风的形状；\n你名字里的{第二字}，是山的重量。\n愿你带着{attrC}去行走，\n带着{attrD}去相信。`,
+        `亲爱的{全名}：\n你名字里的{第一字}，藏着{attrA}的底色；\n你名字里的{第二字}，写着{attrB}的注脚。\n愿你带着{attrC}去行走，\n带着{attrD}去相信。`,
         `{全名}，\n你的名字是星辰，{attrA}；\n你的名字也是大地，{attrB}。\n仰望星空时，不忘脚踏实地。\n这就是你名字的意义。`,
         `很多年前，有人写下你的名字，\n把{attrA}和{attrB}，\n一起藏进了这两个字里。\n很多年后，你读懂了它。\n{全名}，\n这是时间给你的礼物。`,
         `{全名}，你好。\n你问名字的意义？\n我想，大概是——\n以{第一字}之{attrA}，\n以{第二字}之{attrB}，\n在这个时代，写下你自己的答案。`,
@@ -713,22 +745,13 @@
         }, 2000);
     }
 
+    // ============ 图片保存（长按保存方案） ============
     async function exportPoster() {
         const posterElement = document.getElementById('posterExportArea');
         try {
             const dataUrl = await htmlToImage.toPng(posterElement, { quality: 1, pixelRatio: 2 });
-            const img = new Image();
-            img.src = dataUrl;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                posterElement.innerHTML = '';
-                posterElement.appendChild(canvas);
-                alert('海报已生成，请长按图片保存。\n如无法保存，可使用手机截屏。');
-            };
+            posterElement.innerHTML = `<img src="${dataUrl}" style="width:100%;height:100%;object-fit:contain;border-radius:14px;" />`;
+            alert('海报已生成，请长按图片保存。\n如无法保存，可使用手机截屏。');
         } catch (error) {
             console.error('导出失败:', error);
             alert('海报生成失败，请重试');
