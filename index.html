@@ -47,7 +47,13 @@
     font-family: "STKaiti", "KaiTi", "楷体", "PingFang SC", "Microsoft YaHei", serif;
 }
         .btn-poster { margin-top: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
-        .poster-preview { width: 82%; max-width: 340px; aspect-ratio: 7/10; background: linear-gradient(160deg, #8B0000 0%, #B22222 40%, #8B0000 100%); border: 2px solid rgba(255,215,0,0.6); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 24px; position: relative; overflow: hidden; box-shadow: 0 8px 35px rgba(0,0,0,0.4); }
+        .poster-preview {
+    width: 82%;
+    max-width: 340px;
+    aspect-ratio: 7/10;
+    background: url('images/poster-bg.png') center/cover no-repeat;
+    /* 后面省略 */
+}
         .poster-watermark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.04)"/></svg>'); pointer-events: none; }
         .poster-poem {
     font-size: 1.15rem;
