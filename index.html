@@ -8,9 +8,29 @@
     <script src="geneLib.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #8B0000; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; overflow: hidden; }
-        .container { width: 100%; height: 100vh; background: #8B0000; position: relative; overflow: hidden; }
-        .page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; color: #FFD700; text-align: center; padding: 20px; transition: opacity 0.5s; }
+        body { background: #8B0000; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        .container {
+            width: 100%;
+            height: 100vh;
+            background: #8B0000;
+            position: relative;
+            overflow-y: auto;       /* 允许垂直滚动 */
+            overflow-x: hidden;
+        }
+        .page {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            min-height: 100vh;     /* 最小高度撑满一屏 */
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            text-align: center;
+            padding: 20px 20px 30px; /* 底部留白 */
+            transition: opacity 0.5s;
+        }
         .page.active { display: flex; }
         .cover-poster { width: 85%; max-width: 360px; aspect-ratio: 7/10; margin-bottom: 30px; position: relative; overflow: hidden; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
         .poster-img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -28,47 +48,61 @@
         .btn-decode { background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 48px; font-size: 1.2rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
         .emblem-static { width: 100px; height: 100px; margin-bottom: 50px; }
         .decoding-text { font-size: 0.95rem; color: rgba(255,215,0,0.6); letter-spacing: 1px; }
-        .report-card { width: 88%; max-width: 380px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.5); border-radius: 18px; padding: 35px 25px; position: relative; backdrop-filter: blur(2px); }
+        .report-card { width: 88%; max-width: 380px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.5); border-radius: 18px; padding: 35px 25px; position: relative; backdrop-filter: blur(2px); margin-bottom: 20px; }
         .report-title { font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 18px; margin-bottom: 22px; }
         .report-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; font-size: 0.95rem; }
         .report-item .label { color: rgba(255,215,0,0.65); letter-spacing: 1px; }
         .report-item .value { font-weight: 600; text-align: right; max-width: 60%; line-height: 1.5; }
         .report-poem {
-    margin-top: 28px;
-    padding: 28px 10px 20px 10px;
-    border-top: 1px solid rgba(255,215,0,0.25);
-    font-size: 1.1rem;
-    line-height: 2.6;
-    white-space: pre-line;
-    letter-spacing: 1.5px;
-    text-align: center;
-    color: #FFE4B5;
-    font-style: italic;
-    font-family: "STKaiti", "KaiTi", "楷体", "PingFang SC", "Microsoft YaHei", serif;
-}
-        .btn-poster { margin-top: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
+            font-family: "STKaiti", "KaiTi", "楷体", "Noto Serif SC", "PingFang SC", serif;
+            font-size: 1.15rem;
+            line-height: 2.6;
+            letter-spacing: 1.5px;
+            text-align: center;
+            color: #FFE4B5;
+            margin-top: 28px;
+            padding: 24px 10px 20px 10px;
+            border-top: 1px solid rgba(255,215,0,0.25);
+            white-space: pre-line;
+            word-break: keep-all;
+        }
+        .btn-poster { margin-top: 25px; margin-bottom: 30px; background: linear-gradient(135deg, #FFD700, #FFA500); color: #8B0000; border: none; padding: 14px 42px; font-size: 1.15rem; font-weight: bold; border-radius: 50px; letter-spacing: 3px; cursor: pointer; box-shadow: 0 4px 15px rgba(255,215,0,0.3); }
         .poster-preview {
-    width: 82%;
-    max-width: 340px;
-    aspect-ratio: 7/10;
-    background: url('images/poster-bg.png') center/cover no-repeat;
-    /* 后面省略 */
-}
+            width: 82%;
+            max-width: 340px;
+            aspect-ratio: 7/10;
+            background: url('images/poster-bg.png') center/cover no-repeat;
+            border: 2px solid rgba(255,215,0,0.6);
+            border-radius: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 28px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 35px rgba(0,0,0,0.4);
+            margin-bottom: 20px;
+        }
         .poster-watermark { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 15 L58 38 L83 38 L63 52 L71 75 L50 61 L29 75 L37 52 L17 38 L42 38 Z" fill="rgba(255,255,255,0.04)"/></svg>'); pointer-events: none; }
         .poster-poem {
-    font-size: 1.15rem;
-    line-height: 2.8;
-    text-shadow: 0 0 12px rgba(255,215,0,0.2);
-    z-index: 1;
-    white-space: pre-line;
-    text-align: center;
-    letter-spacing: 2px;
-    color: #FFE4B5;
-    font-style: italic;
-    font-family: "STKaiti", "KaiTi", "楷体", "PingFang SC", "Microsoft YaHei", serif;
-    padding: 0 8px;
-}
-        .btn-share { margin-top: 28px; background: transparent; color: #FFD700; border: 2px solid rgba(255,215,0,0.6); padding: 12px 36px; font-size: 1rem; border-radius: 50px; letter-spacing: 3px; cursor: pointer; transition: background 0.3s, border-color 0.3s; }
+            font-family: "STKaiti", "KaiTi", "楷体", "Noto Serif SC", "Source Han Serif SC", serif;
+            font-size: 1.3rem;
+            line-height: 2.8;
+            letter-spacing: 2px;
+            text-align: center;
+            color: #FFE4B5;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            z-index: 1;
+            white-space: pre-line;
+            word-break: keep-all;
+            max-width: 100%;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 12px;
+            padding: 20px 16px;
+        }
+        .btn-share { margin-top: 25px; margin-bottom: 30px; background: transparent; color: #FFD700; border: 2px solid rgba(255,215,0,0.6); padding: 12px 36px; font-size: 1rem; border-radius: 50px; letter-spacing: 3px; cursor: pointer; transition: background 0.3s, border-color 0.3s; }
         .btn-share:active { background: rgba(255,215,0,0.1); border-color: #FFD700; }
         .poster-preview img { width: 100%; height: 100%; object-fit: contain; border-radius: 14px; }
     </style>
