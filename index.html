@@ -92,7 +92,7 @@
             <div class="report-item"><span class="label">隐性基因</span><span class="value" id="reportAttrB">---</span></div>
             <div class="report-item"><span class="label">基因纯度</span><span class="value">100%热爱</span></div>
             <div class="report-poem" id="reportPoem">---</div>
-            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);"><span>鉴定单位：红色基因研究中心</span><span>2026年7月1日</span></div>
+            <div class="report-item" style="margin-top:16px; font-size:0.85rem; color:rgba(255,215,0,0.45);"><span>鉴定单位：红色基因研究中心</span><span>2026年7月</span></div>
         </div>
         <button class="btn-poster" onclick="goToPage(5)">生成专属海报</button>
     </div>
@@ -114,9 +114,7 @@ const fallbackGene = {
     attrD: ["无名亦有名，平凡亦英雄"]
 };
 
-// 100套诗文模板（前50套经典 + 后50套简洁/问答/奋斗/身份/藏头）
 const poemTemplates = [
-    // 1-50 套 (古风、现代诗、金句、宣言)
     `《{姓氏}氏志》\n{第一字}山{第二字}水之间，一片丹心在此间。\n生来有{attrA}，\n修得{attrB}。\n莫问前程几许，只顾风雨兼程。\n是为{全名}，是为信仰。`,
     `{全名}·铭\n名者，命也。父母赐我以名，我以此名立志。\n愿有{attrA}之胸怀，\n亦有{attrB}之坚守。\n以此铭志，以此践行。`,
     `行香子·{全名}\n{第一字}字当头，{第二字}字为骨。\n这一生，{attrA}，{attrB}。\n不负韶华，不负时代。\n行遍山河，此心依旧。`,
@@ -162,8 +160,6 @@ const poemTemplates = [
     `{全名}的青春宣言：\n{attrA}，{attrB}。\n请党放心，强国有我。`,
     `{全名}，你的名字是：\n{attrA}的传承，\n{attrB}的接力。`,
     `{全名}的奋斗格言：\n以{attrA}为舟，\n以{attrB}为桨，\n驶向星辰大海。`,
-
-    // 51-100 套 (简洁宣言、时代问卷、奋斗姿态、身份认同、藏头嵌字)
     `{全名}：以{attrA}为魂，以{attrB}为骨。`,
     `{全名}：{attrA}于心，{attrB}于行。`,
     `{全名}：{第一字}是{attrA}，{第二字}是{attrB}。`,
