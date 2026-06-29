@@ -95,8 +95,9 @@
             text-shadow: 0 1px 4px rgba(0,0,0,0.5);
             z-index: 1;
             white-space: pre-line;
-            word-break: keep-all;
-            max-width: 100%;
+            word-break: break-word;       /* 关键：允许在任意字符间换行 */
+            overflow-wrap: break-word;    /* 兜底兼容 */
+            max-width: 100%;              /* 限制最大宽度不超出父容器 */
             font-weight: 500;
             background: rgba(0, 0, 0, 0.35);
             border-radius: 12px;
